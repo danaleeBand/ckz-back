@@ -1,8 +1,8 @@
 import { DataSource } from 'typeorm';
 import { User } from './src/user/user.entity';
 import { CreateUser1713366146080 } from './src/migrations/1713366146080-create-user';
-import { UserOauthToken } from './src/auth/user-oauth-token.entitiy';
 import { CreateUserOauthToken1713369213223 } from './src/migrations/1713369213223-create-user-oauth-token';
+import { UserOauthToken } from './src/auth/user-oauth-token.entity';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',

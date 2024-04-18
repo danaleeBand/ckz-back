@@ -5,12 +5,11 @@ export class CreateUserOauthToken1713369213223 implements MigrationInterface {
     await queryRunner.query(`
       CREATE TYPE provider_enum AS ENUM ('kakao', 'google');
 
-      CREATE TABLE "social_login" (
+      CREATE TABLE "user_oauth_token" (
         "id" SERIAL PRIMARY KEY,
         "user_id" INT NOT NULL,
         "provider" provider_enum NOT NULL,
         "provider_id" VARCHAR(25) NOT NULL,
-        "id_token" VARCHAR(1000) NOT NULL,
         "access_token" VARCHAR(255) NOT NULL,
         "refresh_token" VARCHAR(255) NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,

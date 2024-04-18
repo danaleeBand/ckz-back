@@ -26,9 +26,6 @@ export class UserOauthToken {
   @Column({ type: 'varchar', length: 25 })
   provider_id: string;
 
-  @Column({ type: 'varchar', length: 1000 })
-  id_token: string;
-
   @Column({ type: 'varchar', length: 255 })
   access_token: string;
 
