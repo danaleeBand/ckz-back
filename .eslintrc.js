@@ -50,5 +50,6 @@ module.exports = {
     quotes: [1, 'single'], // single-quote 사용
     'import/no-absolute-path': 0, // 절대경로 사용 허용
     "class-methods-use-this": "off",
+    "no-underscore-dangle": "off",
   },
 };
