@@ -13,18 +13,18 @@ export enum Provider {
 }
 
 @Entity()
-export class UserOauthToken {
+export class Auth {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'int' })
   user_id: number;
 
+  @Column({ type: 'varchar', length: 25 })
+  provider_user_id: string;
+
   @Column({ type: 'enum', enum: Provider })
   provider: Provider;
-
-  @Column({ type: 'varchar', length: 25 })
-  provider_id: string;
 
   @Column({ type: 'varchar', length: 255 })
   access_token: string;
