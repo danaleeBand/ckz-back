@@ -8,12 +8,6 @@ export class User {
   @Column()
   name: string;
 
-  @Column()
-  email: string;
-
-  @Column({ nullable: true })
-  profile_color: string;
-
   @Column({ nullable: true })
   profile_image_url: string;
 
