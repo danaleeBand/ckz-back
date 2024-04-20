@@ -25,7 +25,7 @@ export class KakaoStrategy extends PassportStrategy(Strategy, 'kakao') {
       userName: profile.username,
       profileImage: profile._json.kakao_account.profile.profile_image_url,
     };
-    await this.authService.validateKakaoUser(user);
-    return user;
+    const userInfo = await this.authService.validateKakaoUser(user);
+    return userInfo;
   }
 }
