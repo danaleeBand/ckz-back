@@ -47,6 +47,9 @@ $ yarn run test:cov
 $ yarn typeorm migration:create src/migrations/{파일명}
 
 # 실행
-$ yarn typeorm:migration -d ormconfig.ts
+$ yarn typeorm migration:run -d ormconfig.ts
+
+# 되돌리기
+$ yarn typeorm migration:revert -d ormconfig.ts
 ```
 
