@@ -13,5 +13,10 @@ export class CreateUser1713366146080 implements MigrationInterface {
     `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    const table = await queryRunner.getTable('user');
+    if (table) {
+      await queryRunner.query(`DROP TABLE "user"`);
+    }
+  }
 }

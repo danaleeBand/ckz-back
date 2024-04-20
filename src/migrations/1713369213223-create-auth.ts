@@ -14,10 +14,24 @@ export class CreateAuth1713369213223 implements MigrationInterface {
         "refresh_token" VARCHAR(255) NOT NULL,
         "created_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         "updated_at" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        CONSTRAINT "FK_social_login_user" FOREIGN KEY ("user_id") REFERENCES "user" ("id")
+        CONSTRAINT "FK_social_login_user" FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON DELETE CASCADE
       )
     `);
   }
 
-  public async down(queryRunner: QueryRunner): Promise<void> {}
+  public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(`
+        ALTER TABLE "auth" DROP CONSTRAINT "FK_social_login_user";
+    `);
+
+    // "auth" 테이블 삭제
+    await queryRunner.query(`
+        DROP TABLE "auth";
+    `);
+
+    // "provider_enum" 타입 삭제
+    await queryRunner.query(`
+      DROP TYPE "provider_enum";
+    `);
+  }
 }
