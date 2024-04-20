@@ -7,6 +7,8 @@ import { Workspace } from './src/workspace/workspace.entity';
 import { CreateWorkspace1713627752625 } from './src/migrations/1713627752625-create-workspace';
 import { UserWorkspace } from './src/workspace/user-workspace.entity';
 import { CreateUserWorkspace1713628904253 } from './src/migrations/1713628904253-create-user-workspace';
+import { Folder } from './src/folder/folder.entity';
+import { CreateFolder1713629509672 } from './src/migrations/1713629509672-create-folder';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -18,11 +20,12 @@ export const AppDataSource = new DataSource({
   synchronize: false,
   migrationsRun: false,
   migrationsTableName: 'migrations',
-  entities: [User, Auth, Workspace, UserWorkspace],
+  entities: [User, Auth, Workspace, UserWorkspace, Folder],
   migrations: [
     CreateUser1713366146080,
     CreateAuth1713369213223,
     CreateWorkspace1713627752625,
-    CreateUserWorkspace1713628904253
+    CreateUserWorkspace1713628904253,
+    CreateFolder1713629509672,
   ],
 });
