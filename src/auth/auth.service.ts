@@ -17,7 +17,7 @@ export class AuthService {
 
   async validateKakaoUser(user: any): Promise<any> {
     const existingUser = await this.findOneAuth(Provider.KAKAO, user.kakaoId);
-    let userId = existingUser.user_id;
+    let userId = existingUser?.user_id;
     if (!existingUser) {
       const queryRunner = this.dataSource.createQueryRunner();
       await queryRunner.connect();
