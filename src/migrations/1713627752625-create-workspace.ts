@@ -1,12 +1,12 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateUser1713366146080 implements MigrationInterface {
+export class CreateWorkspace1713627752625 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(`
-      CREATE TABLE "user" (
+      CREATE TABLE "workspace" (
         "id" SERIAL PRIMARY KEY,
         "name" VARCHAR(255) NOT NULL,
-        "profile_image_url" VARCHAR(255),
+        "folder_order" INT[] NOT NULL DEFAULT '{}'::INT[],
         "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
       )
@@ -14,9 +14,6 @@ export class CreateUser1713366146080 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    const table = await queryRunner.getTable('user');
-    if (table) {
-      await queryRunner.query(`DROP TABLE "user"`);
-    }
+    await queryRunner.query(`DROP TABLE "workspace"`);
   }
 }
