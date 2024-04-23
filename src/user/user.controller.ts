@@ -1,7 +1,7 @@
-import {Controller, Get, Req, UseGuards} from '@nestjs/common';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
-import {AuthGuard} from "@nestjs/passport";
 
 @ApiTags('사용자')
 @Controller('/user')

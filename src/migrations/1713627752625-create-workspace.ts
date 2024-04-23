@@ -14,6 +14,6 @@ export class CreateWorkspace1713627752625 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "workspace"`);
+    await queryRunner.query('DROP TABLE "workspace"');
   }
 }

@@ -16,6 +16,6 @@ export class CreateFolder1713629509672 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "folder"`);
+    await queryRunner.query('DROP TABLE "folder"');
   }
 }
