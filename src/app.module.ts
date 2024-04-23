@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import {JwtModule} from "@nestjs/jwt";
+import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthController } from './auth/auth.controller';
@@ -9,6 +9,7 @@ import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
 import { Auth } from './auth/auth.entity';
+import { CommonModule } from './common.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Auth } from './auth/auth.entity';
     UserModule,
     TypeOrmModule.forFeature([Auth]),
     JwtModule.register({}),
+    CommonModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService, UserService, AuthService],
