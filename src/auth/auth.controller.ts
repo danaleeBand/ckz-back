@@ -21,6 +21,7 @@ import { AuthService } from './auth.service';
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @Get('/kakao')
   @ApiOperation({
     summary: '카카오 로그인 페이지',
