@@ -16,6 +16,6 @@ export class UserController {
     description: '내 정보 조회',
   })
   async getMyInfo(@Req() req) {
-    return 123;
+    return '통과';
   }
 }
