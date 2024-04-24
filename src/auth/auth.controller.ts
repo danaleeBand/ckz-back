@@ -7,7 +7,12 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import {ApiOkResponse, ApiOperation, ApiQuery, ApiTags} from '@nestjs/swagger';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
@@ -16,6 +21,7 @@ import { AuthService } from './auth.service';
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
   @Get('/kakao')
   @ApiOperation({
     summary: '카카오 로그인 페이지',

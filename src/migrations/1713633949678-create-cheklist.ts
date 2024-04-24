@@ -16,6 +16,6 @@ export class CreateCheklist1713633949678 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(`DROP TABLE "checklist"`);
+    await queryRunner.query('DROP TABLE "checklist"');
   }
 }
