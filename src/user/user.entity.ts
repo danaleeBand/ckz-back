@@ -11,6 +11,9 @@ export class User {
   @Column({ nullable: true })
   profile_image_url: string;
 
+  @Column()
+  is_checky: boolean;
+
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
