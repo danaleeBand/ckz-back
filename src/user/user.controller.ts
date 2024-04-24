@@ -1,13 +1,14 @@
-import {Body, Controller, Get, Patch, Req, UseGuards} from '@nestjs/common';
+import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
 import {
-  ApiBearerAuth, ApiBody,
+  ApiBearerAuth,
+  ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
-import {UpdateUserDto} from "./dtos/update-user.dto";
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @ApiTags('사용자')
 @Controller('/user')
