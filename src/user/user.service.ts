@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './user.entity';
 
 @Injectable()
@@ -20,6 +20,7 @@ export class UserService {
   async findOneUser(userId: number) {
     return this.userRepository.findOne({
       where: { id: userId },
+      select: ['name', 'profile_image_url', 'is_checky'],
     });
   }
 }
