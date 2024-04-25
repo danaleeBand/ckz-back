@@ -46,6 +46,37 @@ export class AuthService {
     return userInfo;
   }
 
+  async validateGoogleUser(user: any): Promise<any> {
+    const existingUser = await this.findOneAuth(Provider.GOOGLE, user.googleId);
+    let userId = existingUser?.user_id;
+    if (!existingUser) {
+      const queryRunner = this.dataSource.createQueryRunner();
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+
+      const insertUser = await this.userService.createUser(user.userName);
+      await this.createAuth(
+        Provider.GOOGLE,
+        insertUser,
+        user.googleId,
+        user.accessToken,
+        user.refreshToken,
+      );
+      await queryRunner.commitTransaction();
+      userId = insertUser;
+    } else {
+      await this.updateAuth(
+        Provider.GOOGLE,
+        user.googleId,
+        user.accessToken,
+        user.refreshToken,
+      );
+    }
+
+    const userInfo = await this.userService.findOneUser(userId);
+    return userInfo;
+  }
+
   async findOneAuth(provider, providerUserId: string): Promise<Auth> {
     return this.AuthRepository.findOne({
       where: { provider, provider_user_id: providerUserId },
