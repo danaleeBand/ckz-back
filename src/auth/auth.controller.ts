@@ -60,4 +60,43 @@ export class AuthController {
       await this.authService.getJwtToken(req);
     return { accessToken, refreshToken };
   }
+
+  @Get('/google')
+  @ApiOperation({
+    summary: '구글 로그인 페이지',
+    description: '구글 로그인 페이지',
+  })
+  async googleAuth(@Res() res: Response): Promise<void> {
+    const callbackURL = encodeURIComponent(process.env.GOOGLE_REDIRECT_URI);
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=profile&access_type=offline`;
+    res.redirect(url);
+  }
+
+  @Get('google/token')
+  @UseGuards(AuthGuard('google'))
+  @ApiOperation({
+    summary: '구글 인증',
+    description: '구글 인증',
+  })
+  @ApiQuery({
+    name: 'code',
+    type: String,
+    required: true,
+    description: '구글 인증 코드',
+  })
+  @ApiOkResponse({
+    description: '성공',
+    schema: {
+      example: {
+        accessToken: 'access_token',
+        refreshToken: 'refresh_token',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.OK)
+  async googleAuthCallBack(@Req() req) {
+    const { accessToken, refreshToken } =
+      await this.authService.getJwtToken(req);
+    return { accessToken, refreshToken };
+  }
 }

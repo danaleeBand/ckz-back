@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
@@ -36,6 +37,7 @@
     "dotenv": "^16.4.5",
     "eslint-plugin-import": "^2.29.1",
     "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-kakao": "^1.0.1",
     "pg": "^8.11.5",
@@ -51,6 +53,7 @@
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/passport": "^0",
+    "@types/passport-google-oauth20": "^2",
     "@types/passport-jwt": "^4",
     "@types/passport-kakao": "^1",
     "@types/pg": "^8",
