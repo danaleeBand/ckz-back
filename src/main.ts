@@ -6,6 +6,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   dotenv.config();
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('api/v1');
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Checkuiz API')
     .setDescription('Checkuiz API')
@@ -20,8 +22,10 @@ async function bootstrap() {
       'access-token',
     )
     .build();
+
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document);
+
   await app.listen(8000);
 }
 bootstrap();
