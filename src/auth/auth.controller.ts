@@ -68,7 +68,7 @@ export class AuthController {
   })
   async googleAuth(@Res() res: Response): Promise<void> {
     const callbackURL = encodeURIComponent(process.env.GOOGLE_REDIRECT_URI);
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=profile&access_type=offline`;
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${callbackURL}&response_type=code&scope=profile&access_type=offline&prompt=consent`;
     res.redirect(url);
   }
 
