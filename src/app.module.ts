@@ -10,6 +10,15 @@ import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
 import { Auth } from './auth/auth.entity';
 import { CommonModule } from './common.module';
+import { SidebarController } from './sidebar/sidebar.controller';
+import { Workspace } from './workspace/workspace.entity';
+import { WorkspaceService } from './workspace/workspace.service';
+import { UserWorkspace } from './workspace/user-workspace.entity';
+import { SidebarService } from './sidebar/sidebar.service';
+import { FolderService } from './folder/folder.service';
+import { Folder } from './folder/folder.entity';
+import { ChecklistService } from './checklist/checklist.service';
+import { Checklist } from './checklist/checklist.entity';
 
 @Module({
   imports: [
@@ -28,11 +37,25 @@ import { CommonModule } from './common.module';
     }),
     AuthModule,
     UserModule,
-    TypeOrmModule.forFeature([Auth]),
+    TypeOrmModule.forFeature([
+      Auth,
+      Workspace,
+      UserWorkspace,
+      Folder,
+      Checklist,
+    ]),
     JwtModule.register({}),
     CommonModule,
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, UserService, AuthService],
+  controllers: [AppController, AuthController, SidebarController],
+  providers: [
+    AppService,
+    UserService,
+    AuthService,
+    WorkspaceService,
+    SidebarService,
+    FolderService,
+    ChecklistService,
+  ],
 })
 export class AppModule {}
