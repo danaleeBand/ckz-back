@@ -20,7 +20,7 @@ export class Checklist {
 
   @ManyToOne(() => Folder)
   @JoinColumn({ name: 'folder_id' })
-  folder: Folder;
+  folder_id: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

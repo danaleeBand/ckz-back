@@ -14,6 +14,8 @@ import { WorkspaceService } from './workspace/workspace.service';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
+import { ChecklistService } from './checklist/checklist.service';
+import { ChecklistModule } from './checklist/checklist.module';
 
 @Module({
   imports: [
@@ -37,8 +39,9 @@ import { FolderModule } from './folder/folder.module';
     CommonModule,
     WorkspaceModule,
     FolderModule,
+    ChecklistModule,
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, UserService, AuthService, WorkspaceService, FolderService],
+  providers: [AppService, UserService, AuthService, WorkspaceService, FolderService, ChecklistService],
 })
 export class AppModule {}
