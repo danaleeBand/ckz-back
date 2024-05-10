@@ -10,8 +10,13 @@ export class FolderService {
     private folderRepository: Repository<Folder>,
   ) {}
 
-  async createFolder(folderName: string, isDefault?: boolean) {
+  async createFolder(
+    workspaceId: number,
+    folderName: string,
+    isDefault?: boolean,
+  ) {
     const folder = new Folder();
+    folder.workspace_id = workspaceId;
     folder.name = folderName;
     folder.is_default = isDefault ?? false;
     const newFolder = await this.folderRepository.save(folder);

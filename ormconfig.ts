@@ -14,6 +14,7 @@ import { CreateCheklist1713633949678 } from './src/migrations/1713633949678-crea
 import { ChecklistItem } from './src/checklist/checklist-item.entity';
 import { CreateChecklistItem1713677968487 } from './src/migrations/1713677968487-create-checklist-item';
 import { AddIsCheckyColumnToUser1713971629982 } from './src/migrations/1713971629982-add-is-checky-column-to-user';
+import {AddIsDefaultToFolder1715343575657} from "./src/migrations/1715343575657-add-is-default-to-folder";
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -43,5 +44,6 @@ export const AppDataSource = new DataSource({
     CreateCheklist1713633949678,
     CreateChecklistItem1713677968487,
     AddIsCheckyColumnToUser1713971629982,
+    AddIsDefaultToFolder1715343575657,
   ],
 });

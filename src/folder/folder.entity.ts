@@ -14,7 +14,7 @@ export class Folder {
 
   @ManyToOne(() => Workspace)
   @JoinColumn({ name: 'workspace_id' })
-  workspace: Workspace;
+  workspace_id: number;
 
   @Column()
   name: string;
