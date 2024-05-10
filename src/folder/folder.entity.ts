@@ -12,15 +12,18 @@ export class Folder {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ManyToOne(() => Workspace)
+  @JoinColumn({ name: 'workspace_id' })
+  workspace: Workspace;
+
   @Column()
   name: string;
 
   @Column({ type: 'int', array: true, default: '{}' })
   checklist_order: Array<number>;
 
-  @ManyToOne(() => Workspace)
-  @JoinColumn({ name: 'workspace_id' })
-  workspace: Workspace;
+  @Column({ type: 'boolean', default: false })
+  is_default: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

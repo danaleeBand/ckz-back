@@ -12,6 +12,8 @@ import { Auth } from './auth/auth.entity';
 import { CommonModule } from './common.module';
 import { WorkspaceService } from './workspace/workspace.service';
 import { WorkspaceModule } from './workspace/workspace.module';
+import { FolderService } from './folder/folder.service';
+import { FolderModule } from './folder/folder.module';
 
 @Module({
   imports: [
@@ -34,8 +36,9 @@ import { WorkspaceModule } from './workspace/workspace.module';
     JwtModule.register({}),
     CommonModule,
     WorkspaceModule,
+    FolderModule,
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, UserService, AuthService, WorkspaceService],
+  providers: [AppService, UserService, AuthService, WorkspaceService, FolderService],
 })
 export class AppModule {}
