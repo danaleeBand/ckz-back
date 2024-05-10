@@ -29,7 +29,7 @@ export class ChecklistItem {
 
   @ManyToOne(() => Checklist)
   @JoinColumn({ name: 'checklist_id' })
-  checklist: Checklist;
+  checklist_id: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
