@@ -10,6 +10,8 @@ import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
 import { Auth } from './auth/auth.entity';
 import { CommonModule } from './common.module';
+import { WorkspaceService } from './workspace/workspace.service';
+import { WorkspaceModule } from './workspace/workspace.module';
 
 @Module({
   imports: [
@@ -31,8 +33,9 @@ import { CommonModule } from './common.module';
     TypeOrmModule.forFeature([Auth]),
     JwtModule.register({}),
     CommonModule,
+    WorkspaceModule,
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, UserService, AuthService],
+  providers: [AppService, UserService, AuthService, WorkspaceService],
 })
 export class AppModule {}

@@ -40,4 +40,7 @@ export class UserService {
     user.profile_image_url = profileImageUrl;
     await this.userRepository.save(user);
   }
+
+  async createSampleData(userId: number) {
+  }
 }
