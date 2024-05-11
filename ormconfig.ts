@@ -16,6 +16,7 @@ import { CreateChecklistItem1713677968487 } from './src/migrations/1713677968487
 import { AddIsCheckyColumnToUser1713971629982 } from './src/migrations/1713971629982-add-is-checky-column-to-user';
 import { AddIsDefaultToFolder1715343575657 } from './src/migrations/1715343575657-add-is-default-to-folder';
 import { EditMemoToChecklistItem1715433116660 } from './src/migrations/1715433116660-edit-memo-to-checklist-item';
+import { RenameUserWorkspaceTable1715456805571 } from './src/migrations/1715456805571-rename-user-workspace-table';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -47,5 +48,6 @@ export const AppDataSource = new DataSource({
     AddIsCheckyColumnToUser1713971629982,
     AddIsDefaultToFolder1715343575657,
     EditMemoToChecklistItem1715433116660,
+    RenameUserWorkspaceTable1715456805571,
   ],
 });
