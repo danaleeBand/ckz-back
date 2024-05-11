@@ -9,7 +9,7 @@ import { Workspace } from './workspace.entity';
 import { User } from '../user/user.entity';
 
 @Entity()
-export class UserWorkspace {
+export class WorkspaceUser {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -5,7 +5,7 @@ import { Auth } from './src/auth/auth.entity';
 import { CreateAuth1713369213223 } from './src/migrations/1713369213223-create-auth';
 import { Workspace } from './src/workspace/workspace.entity';
 import { CreateWorkspace1713627752625 } from './src/migrations/1713627752625-create-workspace';
-import { UserWorkspace } from './src/workspace/user-workspace.entity';
+import { WorkspaceUser } from './src/workspace/workspace-user.entity';
 import { CreateUserWorkspace1713628904253 } from './src/migrations/1713628904253-create-user-workspace';
 import { Folder } from './src/folder/folder.entity';
 import { CreateFolder1713629509672 } from './src/migrations/1713629509672-create-folder';
@@ -32,7 +32,7 @@ export const AppDataSource = new DataSource({
     User,
     Auth,
     Workspace,
-    UserWorkspace,
+    WorkspaceUser,
     Folder,
     Checklist,
     ChecklistItem,
