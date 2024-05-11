@@ -13,18 +13,21 @@ export class Checklist {
   id: number;
 
   @Column()
+  folder_id: number;
+
+  @Column()
   title: string;
 
   @Column({ type: 'int', array: true, nullable: true })
   item_order: Array<number>;
-
-  @ManyToOne(() => Folder)
-  @JoinColumn({ name: 'folder_id' })
-  folder_id: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @ManyToOne(() => Folder)
+  @JoinColumn({ name: 'folder_id' })
+  folder: Folder;
 }

@@ -12,8 +12,7 @@ export class Folder {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Workspace)
-  @JoinColumn({ name: 'workspace_id' })
+  @Column()
   workspace_id: number;
 
   @Column()
@@ -30,4 +29,8 @@ export class Folder {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @ManyToOne(() => Workspace)
+  @JoinColumn({ name: 'workspace_id' })
+  workspace: Workspace;
 }

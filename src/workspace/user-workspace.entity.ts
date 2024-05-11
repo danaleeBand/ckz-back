@@ -13,9 +13,8 @@ export class UserWorkspace {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'user_id' }) // 외래 키 컬럼 이름을 지정
-  user: User;
+  @Column()
+  user_id: number;
 
   @ManyToOne(() => Workspace)
   workspace: Workspace;
@@ -25,4 +24,8 @@ export class UserWorkspace {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }
