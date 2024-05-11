@@ -17,6 +17,7 @@ import { FolderModule } from './folder/folder.module';
 import { ChecklistService } from './checklist/services/checklist.service';
 import { ChecklistModule } from './checklist/checklist.module';
 import { ChecklistItemService } from './checklist/services/checklist_item.service';
+import { QueryRunnerService } from './common/querry_runner.service';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { ChecklistItemService } from './checklist/services/checklist_item.servic
     FolderService,
     ChecklistService,
     ChecklistItemService,
+    QueryRunnerService,
   ],
 })
 export class AppModule {}
