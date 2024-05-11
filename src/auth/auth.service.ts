@@ -90,14 +90,14 @@ export class AuthService {
 
   async getAccessToken(user: any): Promise<string> {
     return this.jwtService.sign(
-      { id: user.id, name: user.userName, profileImgUrl: user.profileImgUrl },
+      { id: user.id, name: user.name, profileImgUrl: user.profile_image_url },
       { secret: process.env.ACCESS_TOKEN_SECRET_KEY, expiresIn: '1h' },
     );
   }
 
   async getRefreshToken(user: any): Promise<string> {
     return this.jwtService.sign(
-      { id: user.id, name: user.userName, profileImgUrl: user.profileImgUrl },
+      { id: user.id, name: user.name, profileImgUrl: user.profile_image_url },
       { secret: process.env.ACCESS_TOKEN_SECRET_KEY, expiresIn: '1w' },
     );
   }
