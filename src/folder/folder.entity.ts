@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Workspace } from '../workspace/workspace.entity';
+import { Workspace } from '../workspace/entities/workspace.entity';
 
 @Entity()
 export class Folder {
