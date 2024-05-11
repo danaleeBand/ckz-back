@@ -10,7 +10,7 @@ import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
 import { Auth } from './auth/auth.entity';
 import { CommonModule } from './common.module';
-import { WorkspaceService } from './workspace/workspace.service';
+import { WorkspaceService } from './workspace/services/workspace.service';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
@@ -18,6 +18,7 @@ import { ChecklistService } from './checklist/services/checklist.service';
 import { ChecklistModule } from './checklist/checklist.module';
 import { ChecklistItemService } from './checklist/services/checklist_item.service';
 import { QueryRunnerService } from './common/querry_runner.service';
+import { WorkspaceUserService } from './workspace/services/workspace_user.service';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { QueryRunnerService } from './common/querry_runner.service';
     UserService,
     AuthService,
     WorkspaceService,
+    WorkspaceUserService,
     FolderService,
     ChecklistService,
     ChecklistItemService,

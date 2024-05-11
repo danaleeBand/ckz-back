@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Workspace } from './workspace.entity';
+import { Workspace } from '../entities/workspace.entity';
 
 @Injectable()
 export class WorkspaceService {
@@ -10,9 +10,9 @@ export class WorkspaceService {
     private workspaceRepository: Repository<Workspace>,
   ) {}
 
-  async createWorkspace() {
+  async createWorkspace(name: string) {
     const workspace = new Workspace();
-    workspace.name = '기본 워크스페이스';
+    workspace.name = name;
     const newWorkspace = await this.workspaceRepository.save(workspace);
     return newWorkspace.id;
   }

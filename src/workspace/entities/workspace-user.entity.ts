@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Workspace } from './workspace.entity';
-import { User } from '../user/user.entity';
+import { User } from '../../user/user.entity';
 
 @Entity()
 export class WorkspaceUser {
@@ -14,10 +14,10 @@ export class WorkspaceUser {
   id: number;
 
   @Column()
-  user_id: number;
+  workspace_id: number;
 
-  @ManyToOne(() => Workspace)
-  workspace: Workspace;
+  @Column()
+  user_id: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
@@ -28,4 +28,8 @@ export class WorkspaceUser {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @ManyToOne(() => Workspace)
+  @JoinColumn({ name: 'workspace_id' })
+  workspace: Workspace;
 }
