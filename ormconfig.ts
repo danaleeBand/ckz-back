@@ -3,9 +3,9 @@ import { User } from './src/user/user.entity';
 import { CreateUser1713366146080 } from './src/migrations/1713366146080-create-user';
 import { Auth } from './src/auth/auth.entity';
 import { CreateAuth1713369213223 } from './src/migrations/1713369213223-create-auth';
-import { Workspace } from './src/workspace/workspace.entity';
+import { Workspace } from './src/workspace/entities/workspace.entity';
 import { CreateWorkspace1713627752625 } from './src/migrations/1713627752625-create-workspace';
-import { UserWorkspace } from './src/workspace/user-workspace.entity';
+import { WorkspaceUser } from './src/workspace/entities/workspace-user.entity';
 import { CreateUserWorkspace1713628904253 } from './src/migrations/1713628904253-create-user-workspace';
 import { Folder } from './src/folder/folder.entity';
 import { CreateFolder1713629509672 } from './src/migrations/1713629509672-create-folder';
@@ -14,6 +14,9 @@ import { CreateCheklist1713633949678 } from './src/migrations/1713633949678-crea
 import { ChecklistItem } from './src/checklist/checklist-item.entity';
 import { CreateChecklistItem1713677968487 } from './src/migrations/1713677968487-create-checklist-item';
 import { AddIsCheckyColumnToUser1713971629982 } from './src/migrations/1713971629982-add-is-checky-column-to-user';
+import { AddIsDefaultToFolder1715343575657 } from './src/migrations/1715343575657-add-is-default-to-folder';
+import { EditMemoToChecklistItem1715433116660 } from './src/migrations/1715433116660-edit-memo-to-checklist-item';
+import { RenameUserWorkspaceTable1715456805571 } from './src/migrations/1715456805571-rename-user-workspace-table';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -29,7 +32,7 @@ export const AppDataSource = new DataSource({
     User,
     Auth,
     Workspace,
-    UserWorkspace,
+    WorkspaceUser,
     Folder,
     Checklist,
     ChecklistItem,
@@ -43,5 +46,8 @@ export const AppDataSource = new DataSource({
     CreateCheklist1713633949678,
     CreateChecklistItem1713677968487,
     AddIsCheckyColumnToUser1713971629982,
+    AddIsDefaultToFolder1715343575657,
+    EditMemoToChecklistItem1715433116660,
+    RenameUserWorkspaceTable1715456805571,
   ],
 });

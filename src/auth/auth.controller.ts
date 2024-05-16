@@ -56,8 +56,9 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   async kakaoAuthCallback(@Req() req) {
-    const { accessToken, refreshToken } =
-      await this.authService.getJwtToken(req);
+    const { accessToken, refreshToken } = await this.authService.getJwtToken(
+      req.user,
+    );
     return { accessToken, refreshToken };
   }
 

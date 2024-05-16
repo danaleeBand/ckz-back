@@ -13,6 +13,9 @@ export class ChecklistItem {
   id: number;
 
   @Column()
+  checklist_id: number;
+
+  @Column()
   title: string;
 
   @Column()
@@ -27,13 +30,13 @@ export class ChecklistItem {
   @Column({ type: 'timestamp', nullable: true })
   checked_at: Date;
 
-  @ManyToOne(() => Checklist)
-  @JoinColumn({ name: 'checklist_id' })
-  checklist: Checklist;
-
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @ManyToOne(() => Checklist)
+  @JoinColumn({ name: 'checklist_id' })
+  checklist: Checklist;
 }

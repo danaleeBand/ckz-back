@@ -19,6 +19,15 @@ import { FolderService } from './folder/folder.service';
 import { Folder } from './folder/folder.entity';
 import { ChecklistService } from './checklist/checklist.service';
 import { Checklist } from './checklist/checklist.entity';
+import { WorkspaceService } from './workspace/services/workspace.service';
+import { WorkspaceModule } from './workspace/workspace.module';
+import { FolderService } from './folder/folder.service';
+import { FolderModule } from './folder/folder.module';
+import { ChecklistService } from './checklist/services/checklist.service';
+import { ChecklistModule } from './checklist/checklist.module';
+import { ChecklistItemService } from './checklist/services/checklist_item.service';
+import { QueryRunnerService } from './common/querry_runner.service';
+import { WorkspaceUserService } from './workspace/services/workspace_user.service';
 
 @Module({
   imports: [
@@ -37,15 +46,12 @@ import { Checklist } from './checklist/checklist.entity';
     }),
     AuthModule,
     UserModule,
-    TypeOrmModule.forFeature([
-      Auth,
-      Workspace,
-      UserWorkspace,
-      Folder,
-      Checklist,
-    ]),
+    TypeOrmModule.forFeature([Auth]),
     JwtModule.register({}),
     CommonModule,
+    WorkspaceModule,
+    FolderModule,
+    ChecklistModule,
   ],
   controllers: [AppController, AuthController, SidebarController],
   providers: [
@@ -53,9 +59,12 @@ import { Checklist } from './checklist/checklist.entity';
     UserService,
     AuthService,
     WorkspaceService,
+    WorkspaceUserService,
     SidebarService,
     FolderService,
     ChecklistService,
+    ChecklistItemService,
+    QueryRunnerService,
   ],
 })
 export class AppModule {}

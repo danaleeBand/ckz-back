@@ -25,4 +25,13 @@ export class FolderService {
       where: { workspace },
     });
   }
+
+  async createFolder(workspaceId: number, name: string, isDefault?: boolean) {
+    const folder = new Folder();
+    folder.workspace_id = workspaceId;
+    folder.name = name;
+    folder.is_default = isDefault ?? false;
+    const newFolder = await this.folderRepository.save(folder);
+    return newFolder.id;
+  }
 }
