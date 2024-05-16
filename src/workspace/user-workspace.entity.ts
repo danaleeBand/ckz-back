@@ -18,6 +18,7 @@ export class UserWorkspace {
   user: User;
 
   @ManyToOne(() => Workspace)
+  @JoinColumn({ name: 'workspace_id' })
   workspace: Workspace;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
