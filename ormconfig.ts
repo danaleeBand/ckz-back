@@ -11,7 +11,7 @@ import { Folder } from './src/folder/folder.entity';
 import { CreateFolder1713629509672 } from './src/migrations/1713629509672-create-folder';
 import { Checklist } from './src/checklist/checklist.entity';
 import { CreateCheklist1713633949678 } from './src/migrations/1713633949678-create-cheklist';
-import { ChecklistItem } from './src/checklist/checklist-item.entity';
+import { ChecklistItem } from './src/checklist-item/checklist-item.entity';
 import { CreateChecklistItem1713677968487 } from './src/migrations/1713677968487-create-checklist-item';
 import { AddIsCheckyColumnToUser1713971629982 } from './src/migrations/1713971629982-add-is-checky-column-to-user';
 import { AddIsDefaultToFolder1715343575657 } from './src/migrations/1715343575657-add-is-default-to-folder';

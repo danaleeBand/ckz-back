@@ -13,9 +13,6 @@ export class Checklist {
   id: number;
 
   @Column()
-  folder_id: number;
-
-  @Column()
   title: string;
 
   @Column({ type: 'int', array: true, nullable: true })

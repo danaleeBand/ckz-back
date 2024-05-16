@@ -13,9 +13,6 @@ export class Folder {
   id: number;
 
   @Column()
-  workspace_id: number;
-
-  @Column()
   name: string;
 
   @Column({ type: 'int', array: true, default: '{}' })

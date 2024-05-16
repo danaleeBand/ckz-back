@@ -2,20 +2,26 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
-import { FolderService } from '../folder/folder.service';
+import { Folder } from '../folder/folder.entity';
 
 @Injectable()
 export class ChecklistService {
   constructor(
     @InjectRepository(Checklist)
     private readonly checklistRepository: Repository<Checklist>,
-    private readonly folderService: FolderService,
   ) {}
 
   async findByFolderId(folderId: number) {
-    const folder = await this.folderService.findById(folderId);
     return this.checklistRepository.find({
-      where: { folder },
+      where: { folder: { id: folderId } },
     });
+  }
+
+  async createChecklist(title: string, folder: Folder) {
+    const checklist = new Checklist();
+    checklist.title = title;
+    checklist.folder = folder;
+    const newChecklist = await this.checklistRepository.save(checklist);
+    return newChecklist;
   }
 }

@@ -5,15 +5,12 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { Checklist } from './checklist.entity';
+import { Checklist } from '../checklist/checklist.entity';
 
 @Entity()
 export class ChecklistItem {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  checklist_id: number;
 
   @Column()
   title: string;

@@ -96,8 +96,9 @@ export class AuthController {
   })
   @HttpCode(HttpStatus.OK)
   async googleAuthCallBack(@Req() req) {
-    const { accessToken, refreshToken } =
-      await this.authService.getJwtToken(req);
+    const { accessToken, refreshToken } = await this.authService.getJwtToken(
+      req.user,
+    );
     return { accessToken, refreshToken };
   }
 }

@@ -11,23 +11,18 @@ import { AuthService } from './auth/auth.service';
 import { Auth } from './auth/auth.entity';
 import { CommonModule } from './common.module';
 import { SidebarController } from './sidebar/sidebar.controller';
-import { Workspace } from './workspace/workspace.entity';
-import { WorkspaceService } from './workspace/workspace.service';
-import { UserWorkspace } from './workspace/user-workspace.entity';
 import { SidebarService } from './sidebar/sidebar.service';
-import { FolderService } from './folder/folder.service';
-import { Folder } from './folder/folder.entity';
-import { ChecklistService } from './checklist/checklist.service';
-import { Checklist } from './checklist/checklist.entity';
 import { WorkspaceService } from './workspace/services/workspace.service';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
-import { ChecklistService } from './checklist/services/checklist.service';
 import { ChecklistModule } from './checklist/checklist.module';
-import { ChecklistItemService } from './checklist/services/checklist_item.service';
+import { ChecklistItemService } from './checklist-item/checklist_item.service';
 import { QueryRunnerService } from './common/querry_runner.service';
 import { WorkspaceUserService } from './workspace/services/workspace_user.service';
+import { SidebarModule } from './sidebar/sidebar.module';
+import { ChecklistItemModule } from './checklist-item/checklist-item.module';
+import { ChecklistService } from './checklist/checklist.service';
 
 @Module({
   imports: [
@@ -52,6 +47,8 @@ import { WorkspaceUserService } from './workspace/services/workspace_user.servic
     WorkspaceModule,
     FolderModule,
     ChecklistModule,
+    SidebarModule,
+    ChecklistItemModule,
   ],
   controllers: [AppController, AuthController, SidebarController],
   providers: [

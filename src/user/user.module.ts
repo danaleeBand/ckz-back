@@ -7,6 +7,7 @@ import { WorkspaceModule } from '../workspace/workspace.module';
 import { FolderModule } from '../folder/folder.module';
 import { ChecklistModule } from '../checklist/checklist.module';
 import { QueryRunnerService } from '../common/querry_runner.service';
+import { ChecklistItemModule } from '../checklist-item/checklist-item.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { QueryRunnerService } from '../common/querry_runner.service';
     WorkspaceModule,
     FolderModule,
     ChecklistModule,
+    ChecklistItemModule,
   ],
   providers: [UserService, QueryRunnerService],
   exports: [UserService, TypeOrmModule, QueryRunnerService],

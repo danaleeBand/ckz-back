@@ -5,10 +5,10 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { FolderService } from '../folder/folder.service';
-import { ChecklistService } from '../checklist/services/checklist.service';
-import { ChecklistItemService } from '../checklist/services/checklist_item.service';
+import { ChecklistItemService } from '../checklist-item/checklist_item.service';
 import { QueryRunnerService } from '../common/querry_runner.service';
-import {WorkspaceUserService} from "../workspace/services/workspace_user.service";
+import { WorkspaceUserService } from '../workspace/services/workspace_user.service';
+import { ChecklistService } from '../checklist/checklist.service';
 
 @Injectable()
 export class UserService {
@@ -33,7 +33,6 @@ export class UserService {
   async findOneUser(userId: number) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      select: ['id', 'name', 'profile_image_url', 'is_checky'],
     });
     return user;
   }
@@ -50,7 +49,7 @@ export class UserService {
     }
 
     if (!user.is_checky) {
-      await this.createSampleData(userId);
+      await this.createSampleData(user);
     }
 
     user.name = userName;
@@ -59,24 +58,24 @@ export class UserService {
     await this.userRepository.save(user);
   }
 
-  async createSampleData(userId: number) {
+  async createSampleData(user: User) {
     await this.queryRunnerService.startTransaction();
 
     try {
-      const workspaceId =
+      const workspace =
         await this.workspaceService.createWorkspace('기본 워크스페이스');
       const workspaceUser = await this.workspaceUserService.createWorkspaceUser(
-        userId,
-        workspaceId,
+        user,
+        workspace,
       );
-      const folderId = await this.folderService.createFolder(
-        workspaceId,
+      const folder = await this.folderService.createFolder(
+        workspace,
         '기본 폴더',
         true,
       );
-      const checklistId = await this.checklistService.createChecklist(
+      const checklist = await this.checklistService.createChecklist(
         '기본 체크리스트',
-        folderId,
+        folder,
       );
       const checklistItemList = [
         '체키가 되기',
@@ -84,10 +83,7 @@ export class UserService {
         '체크리스트 작성하기',
       ];
       const promises = checklistItemList.map(async (title) => {
-        return this.checklistItemService.createChecklistItem(
-          title,
-          checklistId,
-        );
+        return this.checklistItemService.createChecklistItem(title, checklist);
       });
       await Promise.all(promises);
 

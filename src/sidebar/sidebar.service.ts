@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { WorkspaceService } from '../workspace/workspace.service';
-import { UserWorkspace } from '../workspace/user-workspace.entity';
 import { FolderService } from '../folder/folder.service';
 import { ChecklistService } from '../checklist/checklist.service';
+import { WorkspaceService } from '../workspace/services/workspace.service';
+import { WorkspaceUser } from '../workspace/entities/workspace-user.entity';
 
 @Injectable()
 export class SidebarService {
@@ -19,7 +19,7 @@ export class SidebarService {
 
   async findWorkspaces(userId: number) {
     const userWorkspaces = await this.workspaceService.findByUserId(userId);
-    const folders = userWorkspaces.map(async (item: UserWorkspace) => ({
+    const folders = userWorkspaces.map(async (item: WorkspaceUser) => ({
       id: item.workspace.id,
       name: item.workspace.name,
       defaultFolder: [
