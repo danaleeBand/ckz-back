@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
+import { Workspace } from '../workspace/entities/workspace.entity';
 
 @Injectable()
 export class FolderService {
@@ -24,7 +25,7 @@ export class FolderService {
   }
 
   async createFolder(
-    workspace,
+    workspace: Workspace,
     name: string,
     isDefault?: boolean,
     manager?: EntityManager,

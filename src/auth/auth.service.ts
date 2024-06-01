@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { Auth, Provider } from './auth.entity';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -11,28 +12,29 @@ export class AuthService {
     @InjectRepository(Auth)
     private AuthRepository: Repository<Auth>,
     private userService: UserService,
-    private readonly dataSource: DataSource,
+    private dataSource: DataSource,
     private readonly jwtService: JwtService,
   ) {}
 
   async validateKakaoUser(user: any): Promise<any> {
-    const existingUser = await this.findOneAuth(Provider.KAKAO, user.kakaoId);
-    let userId = existingUser?.user_id;
-    if (!existingUser) {
-      const queryRunner = this.dataSource.createQueryRunner();
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
-
-      const insertUser = await this.userService.createUser(user.userName);
-      await this.createAuth(
-        Provider.KAKAO,
-        insertUser,
-        user.kakaoId,
-        user.accessToken,
-        user.refreshToken,
-      );
-      await queryRunner.commitTransaction();
-      userId = insertUser;
+    const existingAuth = await this.findOneAuth(Provider.KAKAO, user.kakaoId);
+    let existingUser = existingAuth?.user;
+    if (!existingAuth) {
+      await this.dataSource.transaction(async (manager: EntityManager) => {
+        const insertUser = await this.userService.createUser(
+          user.userName,
+          manager,
+        );
+        await this.createAuth(
+          Provider.KAKAO,
+          insertUser,
+          user.kakaoId,
+          user.accessToken,
+          user.refreshToken,
+          manager,
+        );
+        existingUser = insertUser;
+      });
     } else {
       await this.updateAuth(
         Provider.KAKAO,
@@ -42,28 +44,29 @@ export class AuthService {
       );
     }
 
-    const userInfo = await this.userService.findOneUser(userId);
+    const userInfo = await this.userService.findOneUser(existingUser.id);
     return userInfo;
   }
 
   async validateGoogleUser(user: any): Promise<any> {
-    const existingUser = await this.findOneAuth(Provider.GOOGLE, user.googleId);
-    let userId = existingUser?.user_id;
-    if (!existingUser) {
-      const queryRunner = this.dataSource.createQueryRunner();
-      await queryRunner.connect();
-      await queryRunner.startTransaction();
-
-      const insertUser = await this.userService.createUser(user.userName);
-      await this.createAuth(
-        Provider.GOOGLE,
-        insertUser,
-        user.googleId,
-        user.accessToken,
-        user.refreshToken,
-      );
-      await queryRunner.commitTransaction();
-      userId = insertUser;
+    const existingAuth = await this.findOneAuth(Provider.GOOGLE, user.googleId);
+    let existingUser = existingAuth?.user;
+    if (!existingAuth) {
+      await this.dataSource.transaction(async (manager: EntityManager) => {
+        const insertUser = await this.userService.createUser(
+          user.userName,
+          manager,
+        );
+        await this.createAuth(
+          Provider.GOOGLE,
+          insertUser,
+          user.googleId,
+          user.accessToken,
+          user.refreshToken,
+          manager,
+        );
+        existingUser = insertUser;
+      });
     } else {
       await this.updateAuth(
         Provider.GOOGLE,
@@ -73,7 +76,7 @@ export class AuthService {
       );
     }
 
-    const userInfo = await this.userService.findOneUser(userId);
+    const userInfo = await this.userService.findOneUser(existingUser.id);
     return userInfo;
   }
 
@@ -85,18 +88,22 @@ export class AuthService {
 
   async createAuth(
     provider: Provider,
-    userId: number,
+    user: User,
     providerUserId: string,
     accessToken: string,
     refreshToken: string,
-  ): Promise<void> {
+    manager?: EntityManager,
+  ): Promise<Auth> {
     const auth = new Auth();
-    auth.user_id = userId;
+    auth.user = user;
     auth.provider = provider;
     auth.provider_user_id = providerUserId;
     auth.access_token = accessToken;
     auth.refresh_token = refreshToken;
-    await this.AuthRepository.save(auth);
+    if (manager) {
+      return manager.save(auth);
+    }
+    return this.AuthRepository.save(auth);
   }
 
   async updateAuth(

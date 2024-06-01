@@ -22,11 +22,13 @@ export class UserService {
     private dataSource: DataSource,
   ) {}
 
-  async createUser(userName) {
+  async createUser(userName, manager?: EntityManager) {
     const user = new User();
     user.name = userName;
-    const newUser = await this.userRepository.save(user);
-    return newUser.id;
+    if (manager) {
+      return manager.save(user);
+    }
+    return this.userRepository.save(user);
   }
 
   async findOneUser(userId: number) {
