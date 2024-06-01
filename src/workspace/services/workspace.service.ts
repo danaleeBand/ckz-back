@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Workspace } from '../entities/workspace.entity';
 import { WorkspaceUser } from '../entities/workspace-user.entity';
 
@@ -13,11 +13,13 @@ export class WorkspaceService {
     private readonly userWorkspaceRepository: Repository<WorkspaceUser>,
   ) {}
 
-  async createWorkspace(name: string) {
+  async createWorkspace(name: string, manager?: EntityManager) {
     const workspace = new Workspace();
     workspace.name = name;
-    const newWorkspace = await this.workspaceRepository.save(workspace);
-    return newWorkspace;
+    if (manager) {
+      return manager.save(workspace);
+    }
+    return this.workspaceRepository.save(workspace);
   }
 
   async findById(workspaceId: number) {

@@ -18,7 +18,6 @@ import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
 import { ChecklistModule } from './checklist/checklist.module';
 import { ChecklistItemService } from './checklist-item/checklist_item.service';
-import { QueryRunnerService } from './common/querry_runner.service';
 import { WorkspaceUserService } from './workspace/services/workspace_user.service';
 import { SidebarModule } from './sidebar/sidebar.module';
 import { ChecklistItemModule } from './checklist-item/checklist-item.module';
@@ -33,6 +32,7 @@ import { ChecklistService } from './checklist/checklist.service';
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
       database: 'checkuiz',
+      logging: 'all',
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: false,
       migrationsRun: false,
@@ -61,7 +61,6 @@ import { ChecklistService } from './checklist/checklist.service';
     FolderService,
     ChecklistService,
     ChecklistItemService,
-    QueryRunnerService,
   ],
 })
 export class AppModule {}
