@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
 import { Folder } from '../folder/folder.entity';
 
@@ -17,11 +17,17 @@ export class ChecklistService {
     });
   }
 
-  async createChecklist(title: string, folder: Folder) {
+  async createChecklist(
+    title: string,
+    folder: Folder,
+    manager?: EntityManager,
+  ) {
     const checklist = new Checklist();
     checklist.title = title;
     checklist.folder = folder;
-    const newChecklist = await this.checklistRepository.save(checklist);
-    return newChecklist;
+    if (manager) {
+      return manager.save(checklist);
+    }
+    return this.checklistRepository.save(checklist);
   }
 }

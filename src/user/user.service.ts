@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource, EntityManager } from 'typeorm';
 import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { FolderService } from '../folder/folder.service';
 import { ChecklistItemService } from '../checklist-item/checklist_item.service';
-import { QueryRunnerService } from '../common/querry_runner.service';
 import { WorkspaceUserService } from '../workspace/services/workspace_user.service';
 import { ChecklistService } from '../checklist/checklist.service';
 
@@ -20,14 +19,16 @@ export class UserService {
     private checklistService: ChecklistService,
     private checklistItemService: ChecklistItemService,
     private workspaceUserService: WorkspaceUserService,
-    private queryRunnerService: QueryRunnerService,
+    private dataSource: DataSource,
   ) {}
 
-  async createUser(userName) {
+  async createUser(userName, manager?: EntityManager) {
     const user = new User();
     user.name = userName;
-    const newUser = await this.userRepository.save(user);
-    return newUser.id;
+    if (manager) {
+      return manager.save(user);
+    }
+    return this.userRepository.save(user);
   }
 
   async findOneUser(userId: number) {
@@ -59,23 +60,26 @@ export class UserService {
   }
 
   async createSampleData(user: User) {
-    await this.queryRunnerService.startTransaction();
-
-    try {
-      const workspace =
-        await this.workspaceService.createWorkspace('기본 워크스페이스');
+    await this.dataSource.transaction(async (manager: EntityManager) => {
+      const workspace = await this.workspaceService.createWorkspace(
+        '기본 워크스페이스',
+        manager,
+      );
       const workspaceUser = await this.workspaceUserService.createWorkspaceUser(
         user,
         workspace,
+        manager,
       );
       const folder = await this.folderService.createFolder(
         workspace,
         '기본 폴더',
         true,
+        manager,
       );
       const checklist = await this.checklistService.createChecklist(
         '기본 체크리스트',
         folder,
+        manager,
       );
       const checklistItemList = [
         '체키가 되기',
@@ -83,16 +87,13 @@ export class UserService {
         '체크리스트 작성하기',
       ];
       const promises = checklistItemList.map(async (title) => {
-        return this.checklistItemService.createChecklistItem(title, checklist);
+        return this.checklistItemService.createChecklistItem(
+          title,
+          checklist,
+          manager,
+        );
       });
       await Promise.all(promises);
-
-      await this.queryRunnerService.commitTransaction();
-    } catch (error) {
-      await this.queryRunnerService.rollbackTransaction();
-      throw error;
-    } finally {
-      await this.queryRunnerService.releaseQueryRunner();
-    }
+    });
   }
 }

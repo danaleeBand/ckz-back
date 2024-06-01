@@ -6,7 +6,6 @@ import { UserController } from './user.controller';
 import { WorkspaceModule } from '../workspace/workspace.module';
 import { FolderModule } from '../folder/folder.module';
 import { ChecklistModule } from '../checklist/checklist.module';
-import { QueryRunnerService } from '../common/querry_runner.service';
 import { ChecklistItemModule } from '../checklist-item/checklist-item.module';
 
 @Module({
@@ -17,8 +16,8 @@ import { ChecklistItemModule } from '../checklist-item/checklist-item.module';
     ChecklistModule,
     ChecklistItemModule,
   ],
-  providers: [UserService, QueryRunnerService],
-  exports: [UserService, TypeOrmModule, QueryRunnerService],
+  providers: [UserService],
+  exports: [UserService, TypeOrmModule],
   controllers: [UserController],
 })
 export class UserModule {}
