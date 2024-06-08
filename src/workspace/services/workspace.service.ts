@@ -39,24 +39,14 @@ export class WorkspaceService {
   async addFolderToWorkspaceOrder(
     workspaceId: number,
     folderId: number,
-    manager?: EntityManager,
+    manager: EntityManager,
   ) {
-    const workspace = await this.workspaceRepository.findOne({
+    const workspace = await manager.findOne(Workspace, {
       where: { id: workspaceId },
     });
-
-    if (!workspace.folder_order) {
-      workspace.folder_order = [];
-    }
-
     if (!workspace.folder_order.includes(folderId)) {
       workspace.folder_order.push(folderId);
-
-      if (manager) {
-        await manager.save(workspace);
-      }
-
-      await this.workspaceRepository.save(workspace);
+      await manager.save(workspace);
     }
   }
 }

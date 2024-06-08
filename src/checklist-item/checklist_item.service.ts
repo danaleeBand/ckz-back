@@ -29,13 +29,10 @@ export class ChecklistItemService {
         checklistItem.id,
         manager,
       );
+      return checklistItem;
     }
-    await this.checklistItemRepository.save(checklistItem);
 
-    await this.checklistService.addChecklistItemToChecklistOrder(
-      checklist.id,
-      checklistItem.id,
-    );
+    await this.checklistItemRepository.save(checklistItem);
 
     return checklistItem;
   }

@@ -44,13 +44,10 @@ export class FolderService {
         folder.id,
         manager,
       );
+      return folder;
     }
-    await this.folderRepository.save(folder);
 
-    await this.workspaceService.addFolderToWorkspaceOrder(
-      workspace.id,
-      folder.id,
-    );
+    await this.folderRepository.save(folder);
 
     return folder;
   }
@@ -58,24 +55,15 @@ export class FolderService {
   async addChecklistToFolderOrder(
     folderId: number,
     checklistId: number,
-    manager?: EntityManager,
+    manager: EntityManager,
   ) {
-    const folder = await this.folderRepository.findOne({
+    const folder = await manager.findOne(Folder, {
       where: { id: folderId },
     });
 
-    if (!folder.checklist_order) {
-      folder.checklist_order = [];
-    }
-
     if (!folder.checklist_order.includes(checklistId)) {
       folder.checklist_order.push(checklistId);
-
-      if (manager) {
-        await manager.save(folder);
-      }
-
-      await this.folderRepository.save(folder);
+      await manager.save(folder);
     }
   }
 }

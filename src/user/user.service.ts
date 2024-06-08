@@ -86,14 +86,22 @@ export class UserService {
         '친구들과 워크스페이스 생성하기',
         '체크리스트 작성하기',
       ];
+      const checklistItemOrder = [];
       const promises = checklistItemList.map(async (title) => {
-        return this.checklistItemService.createChecklistItem(
+        const checklistItem = this.checklistItemService.createChecklistItem(
           title,
           checklist,
           manager,
         );
+        checklistItemOrder.push((await checklistItem).id);
       });
       await Promise.all(promises);
+
+      await this.checklistService.updateChecklistItemOrder(
+        checklist.id,
+        checklistItemOrder,
+        manager,
+      );
     });
   }
 }

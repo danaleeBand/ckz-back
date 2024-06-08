@@ -35,11 +35,10 @@ export class ChecklistService {
         checklist.id,
         manager,
       );
+      return checklist;
     }
 
     await this.checklistRepository.save(checklist);
-
-    await this.folderService.addChecklistToFolderOrder(folder.id, checklist.id);
 
     return checklist;
   }
@@ -47,24 +46,27 @@ export class ChecklistService {
   async addChecklistItemToChecklistOrder(
     checklistId: number,
     checklistItemId: number,
-    manager?: EntityManager,
+    manager: EntityManager,
   ) {
-    const checklist = await this.checklistRepository.findOne({
+    const checklist = await manager.findOne(Checklist, {
       where: { id: checklistId },
     });
 
-    if (!checklist.item_order) {
-      checklist.item_order = [];
-    }
+    checklist.item_order.push(checklistItemId);
 
-    if (!checklist.item_order.includes(checklistItemId)) {
-      checklist.item_order.push(checklistItemId);
+    await manager.save(checklist);
+  }
 
-      if (manager) {
-        await manager.save(checklist);
-      }
+  async updateChecklistItemOrder(
+    checklistId: number,
+    checklistItemIds: number[],
+    manager: EntityManager,
+  ) {
+    const checklist = await manager.findOne(Checklist, {
+      where: { id: checklistId },
+    });
 
-      await this.checklistRepository.save(checklist);
-    }
+    checklist.item_order = checklistItemIds;
+    await manager.save(checklist);
   }
 }
