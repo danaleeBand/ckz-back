@@ -23,6 +23,12 @@ export class ChecklistItemService {
     checklistItem.checklist = checklist;
     if (manager) {
       await manager.save(checklistItem);
+
+      await this.checklistService.addChecklistItemToChecklistOrder(
+        checklist.id,
+        checklistItem.id,
+        manager,
+      );
     }
     await this.checklistItemRepository.save(checklistItem);
 

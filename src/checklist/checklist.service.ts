@@ -29,6 +29,12 @@ export class ChecklistService {
     checklist.folder = folder;
     if (manager) {
       await manager.save(checklist);
+
+      await this.folderService.addChecklistToFolderOrder(
+        folder.id,
+        checklist.id,
+        manager,
+      );
     }
 
     await this.checklistRepository.save(checklist);

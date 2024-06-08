@@ -38,6 +38,12 @@ export class FolderService {
     folder.is_default = isDefault ?? false;
     if (manager) {
       await manager.save(folder);
+
+      await this.workspaceService.addFolderToWorkspaceOrder(
+        workspace.id,
+        folder.id,
+        manager,
+      );
     }
     await this.folderRepository.save(folder);
 
