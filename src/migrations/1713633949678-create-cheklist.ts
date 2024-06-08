@@ -10,7 +10,7 @@ export class CreateCheklist1713633949678 implements MigrationInterface {
         "item_order" INT[] NOT NULL DEFAULT '{}'::INT[],
         "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY ("folder_id") REFERENCES "folder" ("id")
+        FOREIGN KEY ("folder_id") REFERENCES "folder" ("id") ON DELETE CASCADE
       )
     `);
   }
