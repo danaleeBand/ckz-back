@@ -47,9 +47,15 @@ $ yarn run test:cov
 $ yarn typeorm migration:create src/migrations/{파일명}
 
 # 실행
-$ yarn typeorm migration:run -d ormconfig.ts
+$ yarn typeorm:migration
 
 # 되돌리기
-$ yarn typeorm migration:revert -d ormconfig.ts
+$ yarn typeorm:revert
+
+# 전부 삭제
+$ yarn typeorm:drop
+
+# 초기화 (다시 셋팅) - 데이터베이스에 있는 모든 테이블을 삭제하고 마이그레이션을 실행
+$ yarn typeorm:reset
 ```
 
