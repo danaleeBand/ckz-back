@@ -37,4 +37,28 @@ export class ChecklistService {
 
     return checklist;
   }
+
+  async addChecklistItemToChecklistOrder(
+    checklistId: number,
+    checklistItemId: number,
+    manager?: EntityManager,
+  ) {
+    const checklist = await this.checklistRepository.findOne({
+      where: { id: checklistId },
+    });
+
+    if (!checklist.item_order) {
+      checklist.item_order = [];
+    }
+
+    if (!checklist.item_order.includes(checklistItemId)) {
+      checklist.item_order.push(checklistItemId);
+
+      if (manager) {
+        await manager.save(checklist);
+      }
+
+      await this.checklistRepository.save(checklist);
+    }
+  }
 }
