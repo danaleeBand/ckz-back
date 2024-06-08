@@ -10,7 +10,7 @@ export class CreateFolder1713629509672 implements MigrationInterface {
         "checklist_order" INT[] NOT NULL DEFAULT '{}'::INT[],
         "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY ("workspace_id") REFERENCES "workspace" ("id")
+        FOREIGN KEY ("workspace_id") REFERENCES "workspace" ("id") ON DELETE CASCADE
       )
     `);
   }

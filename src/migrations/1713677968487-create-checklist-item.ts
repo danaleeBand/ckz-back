@@ -13,7 +13,7 @@ export class CreateChecklistItem1713677968487 implements MigrationInterface {
         "checked_at" TIMESTAMP,
         "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY ("checklist_id") REFERENCES "checklist" ("id")
+        FOREIGN KEY ("checklist_id") REFERENCES "checklist" ("id") ON DELETE CASCADE
       )
     `);
   }
