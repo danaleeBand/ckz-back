@@ -37,7 +37,7 @@ export class FolderService {
     folder.name = name;
     folder.is_default = isDefault ?? false;
     if (manager) {
-      return manager.save(folder);
+      await manager.save(folder);
     }
     await this.folderRepository.save(folder);
 
@@ -46,6 +46,30 @@ export class FolderService {
       folder.id,
     );
 
-    return this.folderRepository.save(folder);
+    return folder;
+  }
+
+  async addChecklistToFolderOrder(
+    folderId: number,
+    checklistId: number,
+    manager?: EntityManager,
+  ) {
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId },
+    });
+
+    if (!folder.checklist_order) {
+      folder.checklist_order = [];
+    }
+
+    if (!folder.checklist_order.includes(checklistId)) {
+      folder.checklist_order.push(checklistId);
+
+      if (manager) {
+        await manager.save(folder);
+      }
+
+      await this.folderRepository.save(folder);
+    }
   }
 }

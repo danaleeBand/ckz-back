@@ -54,9 +54,9 @@ export class WorkspaceService {
 
       if (manager) {
         await manager.save(workspace);
-      } else {
-        await this.workspaceRepository.save(workspace);
       }
+
+      await this.workspaceRepository.save(workspace);
     }
   }
 }
