@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChecklistItemService } from './checklist_item.service';
-import { ChecklistItem } from './checklist-item.entity';
+import { ChecklistItem } from './checklist_item.entity';
 import {ChecklistModule} from "../checklist/checklist.module";
 
 @Module({
@@ -9,4 +9,4 @@ import {ChecklistModule} from "../checklist/checklist.module";
   providers: [ChecklistItemService],
   exports: [ChecklistItemService, TypeOrmModule],
 })
-export class ChecklistItemModule {}
+export class Checklist_itemModule {}
