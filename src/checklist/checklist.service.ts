@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
 import { Folder } from '../folder/folder.entity';
-import {FolderService} from "../folder/folder.service";
+import { FolderService } from '../folder/folder.service';
 
 @Injectable()
 export class ChecklistService {

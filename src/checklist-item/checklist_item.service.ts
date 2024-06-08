@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { ChecklistItem } from './checklist_item.entity';
 import { Checklist } from '../checklist/checklist.entity';
-import {ChecklistService} from "../checklist/checklist.service";
+import { ChecklistService } from '../checklist/checklist.service';
 
 @Injectable()
 export class ChecklistItemService {

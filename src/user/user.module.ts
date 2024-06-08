@@ -6,7 +6,7 @@ import { UserController } from './user.controller';
 import { WorkspaceModule } from '../workspace/workspace.module';
 import { FolderModule } from '../folder/folder.module';
 import { ChecklistModule } from '../checklist/checklist.module';
-import { Checklist_itemModule } from '../checklist-item/checklist_item.module';
+import { ChecklistItemModule } from '../checklist-item/checklist_item.module';
 
 @Module({
   imports: [
@@ -14,7 +14,7 @@ import { Checklist_itemModule } from '../checklist-item/checklist_item.module';
     WorkspaceModule,
     FolderModule,
     ChecklistModule,
-    Checklist_itemModule,
+    ChecklistItemModule,
   ],
   providers: [UserService],
   exports: [UserService, TypeOrmModule],
