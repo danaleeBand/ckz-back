@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
 import { Workspace } from '../workspace/entities/workspace.entity';
+import { WorkspaceService } from '../workspace/services/workspace.service';
 
 @Injectable()
 export class FolderService {
   constructor(
     @InjectRepository(Folder)
     private readonly folderRepository: Repository<Folder>,
+    private readonly workspaceService: WorkspaceService,
   ) {}
 
   async findById(folderId: number) {
@@ -35,8 +37,33 @@ export class FolderService {
     folder.name = name;
     folder.is_default = isDefault ?? false;
     if (manager) {
-      return manager.save(folder);
+      await manager.save(folder);
+
+      await this.workspaceService.addFolderToWorkspaceOrder(
+        workspace.id,
+        folder.id,
+        manager,
+      );
+      return folder;
     }
-    return this.folderRepository.save(folder);
+
+    await this.folderRepository.save(folder);
+
+    return folder;
+  }
+
+  async addChecklistToFolderOrder(
+    folderId: number,
+    checklistId: number,
+    manager: EntityManager,
+  ) {
+    const folder = await manager.findOne(Folder, {
+      where: { id: folderId },
+    });
+
+    if (!folder.checklist_order.includes(checklistId)) {
+      folder.checklist_order.push(checklistId);
+      await manager.save(folder);
+    }
   }
 }

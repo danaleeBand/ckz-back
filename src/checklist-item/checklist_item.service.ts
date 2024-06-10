@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
-import { ChecklistItem } from './checklist-item.entity';
+import { ChecklistItem } from './checklist_item.entity';
 import { Checklist } from '../checklist/checklist.entity';
+import { ChecklistService } from '../checklist/checklist.service';
 
 @Injectable()
 export class ChecklistItemService {
   constructor(
     @InjectRepository(ChecklistItem)
-    private checklistItemRepository: Repository<ChecklistItem>,
+    private readonly checklistItemRepository: Repository<ChecklistItem>,
+    private readonly checklistService: ChecklistService,
   ) {}
 
   async createChecklistItem(
@@ -20,8 +22,18 @@ export class ChecklistItemService {
     checklistItem.title = title;
     checklistItem.checklist = checklist;
     if (manager) {
-      return manager.save(checklistItem);
+      await manager.save(checklistItem);
+
+      await this.checklistService.addChecklistItemToChecklistOrder(
+        checklist.id,
+        checklistItem.id,
+        manager,
+      );
+      return checklistItem;
     }
-    return this.checklistItemRepository.save(checklistItem);
+
+    await this.checklistItemRepository.save(checklistItem);
+
+    return checklistItem;
   }
 }

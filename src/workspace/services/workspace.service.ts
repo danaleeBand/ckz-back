@@ -35,4 +35,18 @@ export class WorkspaceService {
       relations: ['workspace'],
     });
   }
+
+  async addFolderToWorkspaceOrder(
+    workspaceId: number,
+    folderId: number,
+    manager: EntityManager,
+  ) {
+    const workspace = await manager.findOne(Workspace, {
+      where: { id: workspaceId },
+    });
+    if (!workspace.folder_order.includes(folderId)) {
+      workspace.folder_order.push(folderId);
+      await manager.save(workspace);
+    }
+  }
 }
