@@ -22,6 +22,7 @@ import { WorkspaceUserService } from './workspace/services/workspace_user.servic
 import { SidebarModule } from './sidebar/sidebar.module';
 import { ChecklistItemModule } from './checklist-item/checklist_item.module';
 import { ChecklistService } from './checklist/checklist.service';
+import { PermissionModule } from './permission/permission.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ChecklistService } from './checklist/checklist.service';
     ChecklistModule,
     SidebarModule,
     ChecklistItemModule,
+    PermissionModule,
   ],
   controllers: [AppController, AuthController, SidebarController],
   providers: [
