@@ -59,7 +59,7 @@ export class ChecklistService {
 
   async updateChecklistItemOrder(
     checklistId: number,
-    checklistItemIds: number[],
+    checklistItemIds: Array<number>,
     manager: EntityManager,
   ) {
     const checklist = await manager.findOne(Checklist, {
