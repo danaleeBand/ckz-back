@@ -83,6 +83,7 @@ export class AuthService {
   async findOneAuth(provider, providerUserId: string): Promise<Auth> {
     return this.AuthRepository.findOne({
       where: { provider, provider_user_id: providerUserId },
+      relations: ['user'],
     });
   }
 
