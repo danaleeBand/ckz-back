@@ -15,7 +15,7 @@ export class Checklist {
   @Column()
   title: string;
 
-  @Column({ type: 'int', array: true, nullable: true })
+  @Column({ type: 'int', array: true, default: '{}' })
   item_order: Array<number>;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

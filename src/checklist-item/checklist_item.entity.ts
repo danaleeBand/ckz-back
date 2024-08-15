@@ -15,7 +15,7 @@ export class ChecklistItem {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   memo: string;
 
   @Column({ nullable: true })
