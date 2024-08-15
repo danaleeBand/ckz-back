@@ -7,6 +7,7 @@ import { WorkspaceModule } from '../workspace/workspace.module';
 import { FolderModule } from '../folder/folder.module';
 import { ChecklistModule } from '../checklist/checklist.module';
 import { ChecklistItemModule } from '../checklist-item/checklist_item.module';
+import { PermissionModule } from '../permission/permission.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ChecklistItemModule } from '../checklist-item/checklist_item.module';
     FolderModule,
     ChecklistModule,
     ChecklistItemModule,
+    PermissionModule,
   ],
   providers: [UserService],
   exports: [UserService, TypeOrmModule],

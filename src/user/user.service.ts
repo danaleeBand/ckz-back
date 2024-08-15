@@ -8,6 +8,7 @@ import { FolderService } from '../folder/folder.service';
 import { ChecklistItemService } from '../checklist-item/checklist_item.service';
 import { WorkspaceUserService } from '../workspace/services/workspace_user.service';
 import { ChecklistService } from '../checklist/checklist.service';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable()
 export class UserService {
@@ -20,6 +21,7 @@ export class UserService {
     private checklistItemService: ChecklistItemService,
     private workspaceUserService: WorkspaceUserService,
     private dataSource: DataSource,
+    private permissionService: PermissionService,
   ) {}
 
   async createUser(userName, manager?: EntityManager) {
@@ -60,9 +62,12 @@ export class UserService {
   }
 
   async createSampleData(user: User) {
+    const permissionCode = await this.permissionService.createPermission(user);
+
     await this.dataSource.transaction(async (manager: EntityManager) => {
       const workspace = await this.workspaceService.createWorkspace(
         '기본 워크스페이스',
+        permissionCode,
         manager,
       );
       const workspaceUser = await this.workspaceUserService.createWorkspaceUser(
@@ -73,12 +78,14 @@ export class UserService {
       const folder = await this.folderService.createFolder(
         workspace,
         '기본 폴더',
+        permissionCode,
         true,
         manager,
       );
       const checklist = await this.checklistService.createChecklist(
         '기본 체크리스트',
         folder,
+        permissionCode,
         manager,
       );
       const checklistItemList = [
@@ -91,6 +98,7 @@ export class UserService {
         const checklistItem = this.checklistItemService.createChecklistItem(
           title,
           checklist,
+          permissionCode,
           manager,
         );
         checklistItemOrder.push((await checklistItem).id);

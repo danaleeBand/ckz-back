@@ -13,9 +13,14 @@ export class WorkspaceService {
     private readonly userWorkspaceRepository: Repository<WorkspaceUser>,
   ) {}
 
-  async createWorkspace(name: string, manager?: EntityManager) {
+  async createWorkspace(
+    name: string,
+    permissionCode: string,
+    manager?: EntityManager,
+  ) {
     const workspace = new Workspace();
     workspace.name = name;
+    workspace.permission_code = permissionCode;
     if (manager) {
       return manager.save(workspace);
     }

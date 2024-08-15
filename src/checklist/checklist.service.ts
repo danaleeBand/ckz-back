@@ -22,11 +22,13 @@ export class ChecklistService {
   async createChecklist(
     title: string,
     folder: Folder,
+    permissionCode: string,
     manager?: EntityManager,
   ) {
     const checklist = new Checklist();
     checklist.title = title;
     checklist.folder = folder;
+    checklist.permission_code = permissionCode;
     if (manager) {
       await manager.save(checklist);
 
