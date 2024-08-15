@@ -8,6 +8,7 @@ import { Checklist } from './src/checklist/checklist.entity';
 import { ChecklistItem } from './src/checklist-item/checklist_item.entity';
 import { Permission } from './src/permission/permission.entity';
 import { CreateCheckuizTable1722603380677 } from './src/migrations/1722603380677-create-checkuiz-table';
+import { AddPermissionCodeColumn1723713179055 } from './src/migrations/1723713179055-add-permission-code-column';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -29,5 +30,8 @@ export const AppDataSource = new DataSource({
     ChecklistItem,
     Permission,
   ],
-  migrations: [CreateCheckuizTable1722603380677],
+  migrations: [
+    CreateCheckuizTable1722603380677,
+    AddPermissionCodeColumn1723713179055,
+  ],
 });

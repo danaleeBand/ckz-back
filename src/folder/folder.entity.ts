@@ -30,4 +30,7 @@ export class Folder {
   @ManyToOne(() => Workspace)
   @JoinColumn({ name: 'workspace_id' })
   workspace: Workspace;
+
+  @Column({ type: 'varchar', nullable: false })
+  permission_code: string;
 }

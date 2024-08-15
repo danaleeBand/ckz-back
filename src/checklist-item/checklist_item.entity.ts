@@ -36,4 +36,7 @@ export class ChecklistItem {
   @ManyToOne(() => Checklist)
   @JoinColumn({ name: 'checklist_id' })
   checklist: Checklist;
+
+  @Column({ type: 'varchar', nullable: false })
+  permission_code: string;
 }

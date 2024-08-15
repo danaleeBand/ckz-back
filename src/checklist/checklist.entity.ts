@@ -27,4 +27,7 @@ export class Checklist {
   @ManyToOne(() => Folder)
   @JoinColumn({ name: 'folder_id' })
   folder: Folder;
+
+  @Column({ type: 'varchar', nullable: false })
+  permission_code: string;
 }
