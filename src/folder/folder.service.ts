@@ -29,6 +29,7 @@ export class FolderService {
   async createFolder(
     workspace: Workspace,
     name: string,
+    permissionCode: string,
     isDefault?: boolean,
     manager?: EntityManager,
   ) {
@@ -36,6 +37,7 @@ export class FolderService {
     folder.workspace = workspace;
     folder.name = name;
     folder.is_default = isDefault ?? false;
+    folder.permission_code = permissionCode;
     if (manager) {
       await manager.save(folder);
 

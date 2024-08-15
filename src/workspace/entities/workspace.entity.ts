@@ -16,4 +16,7 @@ export class Workspace {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
+
+  @Column({ type: 'varchar', nullable: false })
+  permission_code: string;
 }

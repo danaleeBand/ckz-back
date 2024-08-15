@@ -15,7 +15,7 @@ export class Checklist {
   @Column()
   title: string;
 
-  @Column({ type: 'int', array: true, nullable: true })
+  @Column({ type: 'int', array: true, default: '{}' })
   item_order: Array<number>;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -27,4 +27,7 @@ export class Checklist {
   @ManyToOne(() => Folder)
   @JoinColumn({ name: 'folder_id' })
   folder: Folder;
+
+  @Column({ type: 'varchar', nullable: false })
+  permission_code: string;
 }

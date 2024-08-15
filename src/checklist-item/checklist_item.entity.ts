@@ -15,7 +15,7 @@ export class ChecklistItem {
   @Column()
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   memo: string;
 
   @Column({ nullable: true })
@@ -36,4 +36,7 @@ export class ChecklistItem {
   @ManyToOne(() => Checklist)
   @JoinColumn({ name: 'checklist_id' })
   checklist: Checklist;
+
+  @Column({ type: 'varchar', nullable: false })
+  permission_code: string;
 }

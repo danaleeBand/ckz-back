@@ -16,11 +16,13 @@ export class ChecklistItemService {
   async createChecklistItem(
     title: string,
     checklist: Checklist,
+    permissionCode: string,
     manager?: EntityManager,
   ) {
     const checklistItem = new ChecklistItem();
     checklistItem.title = title;
     checklistItem.checklist = checklist;
+    checklistItem.permission_code = permissionCode;
     if (manager) {
       await manager.save(checklistItem);
 
