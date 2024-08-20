@@ -14,7 +14,10 @@ export class FolderService {
     private dataSource: DataSource,
   ) {}
 
-  async findById(folderId: number) {
+  async findById(folderId: number, manager?: EntityManager) {
+    if (manager) {
+      return manager.findOne(Folder, { where: { id: folderId } });
+    }
     return this.folderRepository.findOne({
       where: { id: folderId },
     });
@@ -33,7 +36,10 @@ export class FolderService {
     manager?: EntityManager,
   ): Promise<Folder> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
-      const workspace = await this.workspaceService.findById(workspaceId);
+      const workspace = await this.workspaceService.findById(
+        workspaceId,
+        transactionManager,
+      );
 
       const folder = new Folder();
       folder.workspace = workspace;

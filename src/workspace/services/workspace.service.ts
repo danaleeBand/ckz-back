@@ -27,10 +27,12 @@ export class WorkspaceService {
     return this.workspaceRepository.save(workspace);
   }
 
-  async findById(workspaceId: number) {
-    return this.workspaceRepository.findOne({
-      where: { id: workspaceId },
-    });
+  async findById(workspaceId: number, manager?: EntityManager) {
+    if (manager) {
+      return manager.findOne(Workspace, { where: { id: workspaceId } });
+    }
+
+    return this.workspaceRepository.findOne({ where: { id: workspaceId } });
   }
 
   async findByUserId(userId: number) {
