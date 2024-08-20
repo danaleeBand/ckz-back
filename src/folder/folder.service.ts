@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
+import { UpdateFolderDto } from './dtos/update-folder.dto';
 
 @Injectable()
 export class FolderService {
@@ -34,7 +35,7 @@ export class FolderService {
     const workspace = await this.workspaceService.findById(workspaceId);
 
     const folder = new Folder();
-    folder.workspace.id = workspace.id;
+    folder.workspace = workspace;
     folder.name = name;
     folder.is_default = isDefault ?? false;
     folder.permission_code = workspace.permission_code;
@@ -67,5 +68,15 @@ export class FolderService {
       folder.checklist_order.push(checklistId);
       await manager.save(folder);
     }
+  }
+
+  async updateFolder(folderId: number, dto: UpdateFolderDto) {
+    const { name } = dto;
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId },
+    });
+    folder.name = name;
+
+    return this.folderRepository.save(folder);
   }
 }
