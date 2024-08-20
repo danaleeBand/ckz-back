@@ -30,7 +30,6 @@ export class WorkspaceService {
   async findById(workspaceId: number) {
     return this.workspaceRepository.findOne({
       where: { id: workspaceId },
-      select: ['name', 'folder_order'],
     });
   }
 

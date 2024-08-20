@@ -76,9 +76,8 @@ export class UserService {
         manager,
       );
       const folder = await this.folderService.createFolder(
-        workspace,
+        workspace.id,
         '기본 폴더',
-        permissionCode,
         true,
         manager,
       );
