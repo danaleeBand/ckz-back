@@ -26,12 +26,12 @@ export class FolderService {
   }
 
   async createFolder(
-    workspace_id: number,
+    workspaceId: number,
     name: string,
     isDefault?: boolean,
     manager?: EntityManager,
   ) {
-    const workspace = await this.workspaceService.findById(workspace_id);
+    const workspace = await this.workspaceService.findById(workspaceId);
 
     const folder = new Folder();
     folder.workspace.id = workspace.id;
