@@ -17,7 +17,6 @@ export class FolderService {
   async findById(folderId: number) {
     return this.folderRepository.findOne({
       where: { id: folderId },
-      select: ['id', 'name'],
     });
   }
 

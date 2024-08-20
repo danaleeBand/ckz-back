@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
 import { Folder } from '../folder/folder.entity';
 import { FolderService } from '../folder/folder.service';
@@ -11,6 +11,7 @@ export class ChecklistService {
     @InjectRepository(Checklist)
     private readonly checklistRepository: Repository<Checklist>,
     private readonly folderService: FolderService,
+    private dataSource: DataSource,
   ) {}
 
   async findByFolderId(folderId: number) {
@@ -20,29 +21,33 @@ export class ChecklistService {
   }
 
   async createChecklist(
+    folder_id: number,
     title: string,
-    folder: Folder,
-    permissionCode: string,
     manager?: EntityManager,
   ) {
-    const checklist = new Checklist();
-    checklist.title = title;
-    checklist.folder = folder;
-    checklist.permission_code = permissionCode;
-    if (manager) {
-      await manager.save(checklist);
+    const executeInTransaction = async (transactionManager: EntityManager) => {
+      const folder = await this.folderService.findById(folder_id);
+
+      const checklist = new Checklist();
+      checklist.title = title;
+      checklist.folder = folder;
+      checklist.permission_code = folder.permission_code;
+
+      await transactionManager.save(checklist);
 
       await this.folderService.addChecklistToFolderOrder(
         folder.id,
         checklist.id,
-        manager,
+        transactionManager,
       );
+
       return checklist;
+    };
+
+    if (manager) {
+      return executeInTransaction(manager);
     }
-
-    await this.checklistRepository.save(checklist);
-
-    return checklist;
+    return this.dataSource.transaction(executeInTransaction);
   }
 
   async addChecklistItemToChecklistOrder(
