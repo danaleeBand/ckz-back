@@ -19,7 +19,7 @@ import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 export class ChecklistController {
   constructor(private readonly checklistService: ChecklistService) {}
 
-  @Post('/')
+  @Post('/:folderId')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
@@ -28,9 +28,10 @@ export class ChecklistController {
   })
   async createChecklist(
     @Req() req,
+    @Param('folderId') folderId: number,
     @Body() createChecklistDto: CreateChecklistDto,
   ) {
-    const { folderId, title } = createChecklistDto;
+    const { title } = createChecklistDto;
     return this.checklistService.createChecklist(folderId, title);
   }
 
