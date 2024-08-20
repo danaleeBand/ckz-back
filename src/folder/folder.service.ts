@@ -31,7 +31,7 @@ export class FolderService {
     name: string,
     isDefault?: boolean,
     manager?: EntityManager,
-  ) {
+  ): Promise<Folder> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
       const workspace = await this.workspaceService.findById(workspaceId);
 
@@ -97,7 +97,7 @@ export class FolderService {
     }
   }
 
-  async updateFolder(folderId: number, dto: UpdateFolderDto) {
+  async updateFolder(folderId: number, dto: UpdateFolderDto): Promise<Folder> {
     const { name } = dto;
     const folder = await this.folderRepository.findOne({
       where: { id: folderId },
