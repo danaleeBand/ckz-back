@@ -18,15 +18,19 @@ import { UpdateFolderDto } from './dtos/update-folder.dto';
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
-  @Post('/')
+  @Post('/:workspaceId')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '폴더 생성',
     description: '폴더를 생성합니다.',
   })
-  async createFolder(@Req() req, @Body() createFolderDto: CreateFolderDto) {
-    const { workspaceId, name } = createFolderDto;
+  async createFolder(
+    @Req() req,
+    @Param('workspaceId') workspaceId: number,
+    @Body() createFolderDto: CreateFolderDto,
+  ) {
+    const { name } = createFolderDto;
     return this.folderService.createFolder(workspaceId, name);
   }
 

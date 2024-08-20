@@ -27,13 +27,18 @@ export class WorkspaceService {
     return this.workspaceRepository.save(workspace);
   }
 
-  async findById(workspaceId: number) {
-    return this.workspaceRepository.findOne({
-      where: { id: workspaceId },
-    });
+  async findById(
+    workspaceId: number,
+    manager?: EntityManager,
+  ): Promise<Workspace> {
+    if (manager) {
+      return manager.findOne(Workspace, { where: { id: workspaceId } });
+    }
+
+    return this.workspaceRepository.findOne({ where: { id: workspaceId } });
   }
 
-  async findByUserId(userId: number) {
+  async findByUserId(userId: number): Promise<Array<WorkspaceUser>> {
     return this.userWorkspaceRepository.find({
       where: { user: { id: userId } },
       relations: ['workspace'],
@@ -44,7 +49,7 @@ export class WorkspaceService {
     workspaceId: number,
     folderId: number,
     manager: EntityManager,
-  ) {
+  ): Promise<void> {
     const workspace = await manager.findOne(Workspace, {
       where: { id: workspaceId },
     });

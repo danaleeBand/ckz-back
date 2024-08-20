@@ -26,7 +26,10 @@ export class ChecklistService {
     manager?: EntityManager,
   ): Promise<Checklist> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
-      const folder = await this.folderService.findById(folder_id);
+      const folder = await this.folderService.findById(
+        folder_id,
+        transactionManager,
+      );
 
       const checklist = new Checklist();
       checklist.title = title;
