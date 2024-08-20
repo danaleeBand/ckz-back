@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
-import { Workspace } from '../workspace/entities/workspace.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 
 @Injectable()
@@ -27,17 +26,18 @@ export class FolderService {
   }
 
   async createFolder(
-    workspace: Workspace,
+    workspace_id: number,
     name: string,
-    permissionCode: string,
     isDefault?: boolean,
     manager?: EntityManager,
   ) {
+    const workspace = await this.workspaceService.findById(workspace_id);
+
     const folder = new Folder();
-    folder.workspace = workspace;
+    folder.workspace.id = workspace.id;
     folder.name = name;
     folder.is_default = isDefault ?? false;
-    folder.permission_code = permissionCode;
+    folder.permission_code = workspace.permission_code;
     if (manager) {
       await manager.save(folder);
 
