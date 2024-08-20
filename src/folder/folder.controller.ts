@@ -25,8 +25,12 @@ export class FolderController {
     summary: '폴더 생성',
     description: '폴더를 생성합니다.',
   })
-  async createFolder(@Req() req, @Body() createFolderDto: CreateFolderDto) {
-    const { workspaceId, name } = createFolderDto;
+  async createFolder(
+    @Req() req,
+    @Param('workspaceId') workspaceId: number,
+    @Body() createFolderDto: CreateFolderDto,
+  ) {
+    const { name } = createFolderDto;
     return this.folderService.createFolder(workspaceId, name);
   }
 
