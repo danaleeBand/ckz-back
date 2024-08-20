@@ -14,7 +14,7 @@ export class FolderService {
     private dataSource: DataSource,
   ) {}
 
-  async findById(folderId: number, manager?: EntityManager) {
+  async findById(folderId: number, manager?: EntityManager): Promise<Folder> {
     if (manager) {
       return manager.findOne(Folder, { where: { id: folderId } });
     }
@@ -23,7 +23,7 @@ export class FolderService {
     });
   }
 
-  async findByWorkspaceId(workspaceId: number) {
+  async findByWorkspaceId(workspaceId: number): Promise<Folder[]> {
     return this.folderRepository.find({
       where: { workspace: { id: workspaceId } },
     });
