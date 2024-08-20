@@ -4,6 +4,7 @@ import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
 import { Folder } from '../folder/folder.entity';
 import { FolderService } from '../folder/folder.service';
+import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 
 @Injectable()
 export class ChecklistService {
@@ -75,5 +76,18 @@ export class ChecklistService {
 
     checklist.item_order = checklistItemIds;
     await manager.save(checklist);
+  }
+
+  async updateChecklist(
+    checklistId: number,
+    updateChecklistDto: UpdateChecklistDto,
+  ): Promise<Checklist> {
+    const { title } = updateChecklistDto;
+    const checklist = await this.checklistRepository.findOne({
+      where: { id: checklistId },
+    });
+    checklist.title = title;
+
+    return this.checklistRepository.save(checklist);
   }
 }
