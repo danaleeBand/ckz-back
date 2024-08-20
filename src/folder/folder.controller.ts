@@ -18,7 +18,7 @@ import { UpdateFolderDto } from './dtos/update-folder.dto';
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
-  @Post('/')
+  @Post('/:workspaceId')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
