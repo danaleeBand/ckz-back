@@ -23,7 +23,7 @@ export class FolderService {
     });
   }
 
-  async findByWorkspaceId(workspaceId: number): Promise<Folder[]> {
+  async findByWorkspaceId(workspaceId: number): Promise<Array<Folder>> {
     return this.folderRepository.find({
       where: { workspace: { id: workspaceId } },
     });
