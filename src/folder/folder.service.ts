@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
@@ -11,6 +11,7 @@ export class FolderService {
     @InjectRepository(Folder)
     private readonly folderRepository: Repository<Folder>,
     private readonly workspaceService: WorkspaceService,
+    private dataSource: DataSource,
   ) {}
 
   async findById(folderId: number) {
@@ -32,27 +33,30 @@ export class FolderService {
     isDefault?: boolean,
     manager?: EntityManager,
   ) {
-    const workspace = await this.workspaceService.findById(workspaceId);
+    const executeInTransaction = async (transactionManager: EntityManager) => {
+      const workspace = await this.workspaceService.findById(workspaceId);
 
-    const folder = new Folder();
-    folder.workspace = workspace;
-    folder.name = name;
-    folder.is_default = isDefault ?? false;
-    folder.permission_code = workspace.permission_code;
-    if (manager) {
-      await manager.save(folder);
+      const folder = new Folder();
+      folder.workspace = workspace;
+      folder.name = name;
+      folder.is_default = isDefault ?? false;
+      folder.permission_code = workspace.permission_code;
+
+      await transactionManager.save(folder);
 
       await this.workspaceService.addFolderToWorkspaceOrder(
         workspace.id,
         folder.id,
-        manager,
+        transactionManager,
       );
+
       return folder;
+    };
+
+    if (manager) {
+      return executeInTransaction(manager);
     }
-
-    await this.folderRepository.save(folder);
-
-    return folder;
+    return this.dataSource.transaction(executeInTransaction);
   }
 
   async addChecklistToFolderOrder(
