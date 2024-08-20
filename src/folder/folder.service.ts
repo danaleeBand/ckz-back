@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
@@ -17,7 +17,6 @@ export class FolderService {
   async findById(folderId: number) {
     return this.folderRepository.findOne({
       where: { id: folderId },
-      select: ['id', 'name'],
     });
   }
 
@@ -71,6 +70,30 @@ export class FolderService {
     if (!folder.checklist_order.includes(checklistId)) {
       folder.checklist_order.push(checklistId);
       await manager.save(folder);
+    }
+  }
+
+  async removeChecklistToFolderOrder(
+    folderId: number,
+    checklistId: number,
+    manager: EntityManager,
+  ): Promise<void> {
+    const folder = await manager.findOne(Folder, {
+      where: { id: folderId },
+    });
+
+    if (!folder) {
+      throw new NotFoundException(`Folder with ID ${folderId} not found`);
+    }
+
+    const index = folder.checklist_order.indexOf(checklistId);
+    if (index > -1) {
+      folder.checklist_order.splice(index, 1);
+      await manager.save(folder);
+    } else {
+      throw new NotFoundException(
+        `Checklist with ID ${checklistId} not found in folder`,
+      );
     }
   }
 
