@@ -1,8 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
-import { Folder } from '../folder/folder.entity';
 import { FolderService } from '../folder/folder.service';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 
@@ -25,7 +24,7 @@ export class ChecklistService {
     folder_id: number,
     title: string,
     manager?: EntityManager,
-  ) {
+  ): Promise<Checklist> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
       const folder = await this.folderService.findById(folder_id);
 
@@ -89,5 +88,28 @@ export class ChecklistService {
     checklist.title = title;
 
     return this.checklistRepository.save(checklist);
+  }
+
+  async deleteChecklist(checklistId: number): Promise<void> {
+    await this.dataSource.transaction(async (manager: EntityManager) => {
+      const checklist = await manager.findOne(Checklist, {
+        where: { id: checklistId },
+        relations: ['folder'],
+      });
+
+      if (!checklist) {
+        throw new NotFoundException(
+          `Checklist with ID ${checklistId} not found`,
+        );
+      }
+
+      await this.folderService.removeChecklistToFolderOrder(
+        checklist.folder.id,
+        checklist.id,
+        manager,
+      );
+
+      await manager.remove(Checklist, checklist);
+    });
   }
 }
