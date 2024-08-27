@@ -21,13 +21,13 @@ export class ChecklistService {
   }
 
   async createChecklist(
-    folder_id: number,
+    folderId: number,
     title: string,
     manager?: EntityManager,
   ): Promise<Checklist> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
       const folder = await this.folderService.findById(
-        folder_id,
+        folderId,
         transactionManager,
       );
 

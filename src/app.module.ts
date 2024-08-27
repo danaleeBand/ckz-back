@@ -17,10 +17,10 @@ import { WorkspaceModule } from './workspace/workspace.module';
 import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
 import { ChecklistModule } from './checklist/checklist.module';
-import { ChecklistItemService } from './checklist-item/checklist_item.service';
+import { ChecklistItemService } from './checklist-item/checklist-item.service';
 import { WorkspaceUserService } from './workspace/services/workspace_user.service';
 import { SidebarModule } from './sidebar/sidebar.module';
-import { ChecklistItemModule } from './checklist-item/checklist_item.module';
+import { ChecklistItemModule } from './checklist-item/checklist-item.module';
 import { ChecklistService } from './checklist/checklist.service';
 import { PermissionModule } from './permission/permission.module';
 
