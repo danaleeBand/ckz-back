@@ -115,4 +115,10 @@ export class ChecklistService {
       await manager.remove(Checklist, checklist);
     });
   }
+
+  async findByChecklistId(checklistId: number): Promise<Checklist> {
+    return this.checklistRepository.findOne({
+      where: { id: checklistId },
+    });
+  }
 }

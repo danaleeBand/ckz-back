@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Checklist } from '../checklist/checklist.entity';
 
-@Entity()
+@Entity({ name: 'checklist_item' })
 export class ChecklistItem {
   @PrimaryGeneratedColumn()
   id: number;
