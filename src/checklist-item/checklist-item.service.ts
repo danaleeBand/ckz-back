@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { ChecklistItem } from './checklist-item.entity';
 import { ChecklistService } from '../checklist/checklist.service';
+import { UpdateChecklistItemDto } from './dtos/update-checklist-item.dto';
 
 @Injectable()
 export class ChecklistItemService {
@@ -17,7 +18,7 @@ export class ChecklistItemService {
     checklistId: number,
     title: string,
     manager?: EntityManager,
-  ) {
+  ): Promise<ChecklistItem> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
       const checklist = await this.checklistService.findByChecklistId(
         checklistId,
@@ -72,5 +73,22 @@ export class ChecklistItemService {
       .getMany();
 
     return checklistItems;
+  }
+
+  async updateChecklistItem(
+    checklistItemId: number,
+    updateChecklistItemDto: UpdateChecklistItemDto,
+  ): Promise<ChecklistItem> {
+    const { title, memo, imageUrl, isChecked } = updateChecklistItemDto;
+    const checklistItem = await this.checklistItemRepository.findOne({
+      where: { id: checklistItemId },
+    });
+
+    checklistItem.title = title;
+    checklistItem.memo = memo;
+    checklistItem.image_url = imageUrl;
+    checklistItem.is_checked = isChecked;
+
+    return this.checklistItemRepository.save(checklistItem);
   }
 }
