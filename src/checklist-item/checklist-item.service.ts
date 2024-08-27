@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { ChecklistItem } from './checklist-item.entity';
-import { Checklist } from '../checklist/checklist.entity';
 import { ChecklistService } from '../checklist/checklist.service';
 
 @Injectable()
@@ -11,32 +10,39 @@ export class ChecklistItemService {
     @InjectRepository(ChecklistItem)
     private readonly checklistItemRepository: Repository<ChecklistItem>,
     private readonly checklistService: ChecklistService,
+    private dataSource: DataSource,
   ) {}
 
   async createChecklistItem(
+    checklistId: number,
     title: string,
-    checklist: Checklist,
-    permissionCode: string,
     manager?: EntityManager,
   ) {
-    const checklistItem = new ChecklistItem();
-    checklistItem.title = title;
-    checklistItem.checklist = checklist;
-    checklistItem.permission_code = permissionCode;
-    if (manager) {
-      await manager.save(checklistItem);
+    const executeInTransaction = async (transactionManager: EntityManager) => {
+      const checklist = await this.checklistService.findByChecklistId(
+        checklistId,
+        transactionManager,
+      );
+
+      const checklistItem = new ChecklistItem();
+      checklistItem.title = title;
+      checklistItem.checklist = checklist;
+      checklistItem.permission_code = checklist.permission_code;
+
+      await transactionManager.save(checklistItem);
 
       await this.checklistService.addChecklistItemToChecklistOrder(
         checklist.id,
         checklistItem.id,
-        manager,
+        transactionManager,
       );
       return checklistItem;
+    };
+
+    if (manager) {
+      return executeInTransaction(manager);
     }
-
-    await this.checklistItemRepository.save(checklistItem);
-
-    return checklistItem;
+    return this.dataSource.transaction(executeInTransaction);
   }
 
   async getChecklistItems(checklistId: number) {

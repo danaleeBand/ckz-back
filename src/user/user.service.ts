@@ -94,9 +94,8 @@ export class UserService {
       const checklistItemOrder = [];
       const promises = checklistItemList.map(async (title) => {
         const checklistItem = this.checklistItemService.createChecklistItem(
+          checklist.id,
           title,
-          checklist,
-          permissionCode,
           manager,
         );
         checklistItemOrder.push((await checklistItem).id);

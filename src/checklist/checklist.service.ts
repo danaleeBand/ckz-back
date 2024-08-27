@@ -116,7 +116,15 @@ export class ChecklistService {
     });
   }
 
-  async findByChecklistId(checklistId: number): Promise<Checklist> {
+  async findByChecklistId(
+    checklistId: number,
+    manager?: EntityManager,
+  ): Promise<Checklist> {
+    if (manager) {
+      return manager.findOne(Checklist, {
+        where: { id: checklistId },
+      });
+    }
     return this.checklistRepository.findOne({
       where: { id: checklistId },
     });
