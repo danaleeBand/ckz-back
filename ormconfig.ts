@@ -5,10 +5,10 @@ import { Workspace } from './src/workspace/entities/workspace.entity';
 import { WorkspaceUser } from './src/workspace/entities/workspace-user.entity';
 import { Folder } from './src/folder/folder.entity';
 import { Checklist } from './src/checklist/checklist.entity';
-import { ChecklistItem } from './src/checklist-item/checklist_item.entity';
+import { ChecklistItem } from './src/checklist-item/checklist-item.entity';
 import { Permission } from './src/permission/permission.entity';
 import { CreateCheckuiz1723716957910 } from './src/migrations/1723716957910-create-checkuiz';
-import {AlterChecklistTable1723717561735} from "./src/migrations/1723717561735-alter-checklist-table";
+import { AlterChecklistTable1723717561735 } from './src/migrations/1723717561735-alter-checklist-table';
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -30,5 +30,5 @@ export const AppDataSource = new DataSource({
     ChecklistItem,
     Permission,
   ],
-  migrations: [CreateCheckuiz1723716957910,AlterChecklistTable1723717561735],
+  migrations: [CreateCheckuiz1723716957910, AlterChecklistTable1723717561735],
 });

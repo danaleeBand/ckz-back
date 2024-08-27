@@ -5,7 +5,7 @@ import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { FolderService } from '../folder/folder.service';
-import { ChecklistItemService } from '../checklist-item/checklist_item.service';
+import { ChecklistItemService } from '../checklist-item/checklist-item.service';
 import { WorkspaceUserService } from '../workspace/services/workspace_user.service';
 import { ChecklistService } from '../checklist/checklist.service';
 import { PermissionService } from '../permission/permission.service';
@@ -94,9 +94,8 @@ export class UserService {
       const checklistItemOrder = [];
       const promises = checklistItemList.map(async (title) => {
         const checklistItem = this.checklistItemService.createChecklistItem(
+          checklist.id,
           title,
-          checklist,
-          permissionCode,
           manager,
         );
         checklistItemOrder.push((await checklistItem).id);

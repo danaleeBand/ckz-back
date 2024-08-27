@@ -21,13 +21,13 @@ export class ChecklistService {
   }
 
   async createChecklist(
-    folder_id: number,
+    folderId: number,
     title: string,
     manager?: EntityManager,
   ): Promise<Checklist> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
       const folder = await this.folderService.findById(
-        folder_id,
+        folderId,
         transactionManager,
       );
 
@@ -114,5 +114,43 @@ export class ChecklistService {
 
       await manager.remove(Checklist, checklist);
     });
+  }
+
+  async findByChecklistId(
+    checklistId: number,
+    manager?: EntityManager,
+  ): Promise<Checklist> {
+    if (manager) {
+      return manager.findOne(Checklist, {
+        where: { id: checklistId },
+      });
+    }
+    return this.checklistRepository.findOne({
+      where: { id: checklistId },
+    });
+  }
+
+  async removeChecklistItemToChecklistOrder(
+    checklistId: number,
+    checklistItemId: number,
+    manager: EntityManager,
+  ): Promise<void> {
+    const checklist = await manager.findOne(Checklist, {
+      where: { id: checklistId },
+    });
+
+    if (!checklist) {
+      throw new NotFoundException(`Checklist with ID ${checklistId} not found`);
+    }
+
+    const index = checklist.item_order.indexOf(checklistItemId);
+    if (index > -1) {
+      checklist.item_order.splice(index, 1);
+      await manager.save(checklist);
+    } else {
+      throw new NotFoundException(
+        `ChecklistItem with ID ${checklistItemId} not found in checklist`,
+      );
+    }
   }
 }
