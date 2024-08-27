@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { ChecklistItem } from './checklist-item.entity';
@@ -90,5 +90,28 @@ export class ChecklistItemService {
     checklistItem.is_checked = isChecked;
 
     return this.checklistItemRepository.save(checklistItem);
+  }
+
+  async deleteChecklistItem(checklistItemId: number): Promise<void> {
+    await this.dataSource.transaction(async (manager: EntityManager) => {
+      const checklistItem = await manager.findOne(ChecklistItem, {
+        where: { id: checklistItemId },
+        relations: ['checklist'],
+      });
+
+      if (!checklistItem) {
+        throw new NotFoundException(
+          `ChecklistItem with ID ${checklistItemId} not found`,
+        );
+      }
+
+      await this.checklistService.removeChecklistItemToChecklistOrder(
+        checklistItem.checklist.id,
+        checklistItem.id,
+        manager,
+      );
+
+      await manager.remove(ChecklistItem, checklistItem);
+    });
   }
 }

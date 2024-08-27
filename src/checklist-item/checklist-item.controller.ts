@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -59,5 +60,16 @@ export class ChecklistItemController {
       checklistItemId,
       updateChecklistItemDto,
     );
+  }
+
+  @Delete('/:checklistItemId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: '체크리스트 항목 삭제',
+    description: '체크리스트 항목을 삭제합니다.',
+  })
+  async deleteChecklistItem(@Param('checklistItemId') checklistItemId: number) {
+    return this.checklistItemService.deleteChecklistItem(checklistItemId);
   }
 }
