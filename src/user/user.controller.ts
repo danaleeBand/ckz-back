@@ -11,7 +11,7 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
 @ApiTags('사용자')
-@Controller('/user')
+@Controller('/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
