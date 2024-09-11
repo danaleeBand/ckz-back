@@ -13,12 +13,12 @@ import { FolderService } from './folder.service';
 import { CreateFolderDto } from './dtos/create-folder.dto';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
 
-@Controller('folder')
+@Controller('workspaces/:workspaceId/folders')
 @ApiTags('폴더')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
-  @Post('/:workspaceId')
+  @Post('')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
@@ -43,6 +43,7 @@ export class FolderController {
   })
   async updateFolder(
     @Req() req,
+    @Param('workspaceId') workspaceId: number,
     @Param('folderId') folderId: number,
     @Body() updateFolderDto: UpdateFolderDto,
   ) {

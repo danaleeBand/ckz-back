@@ -15,11 +15,11 @@ import { CreateChecklistItemDto } from './dtos/create-checklist-item.dto';
 import { UpdateChecklistItemDto } from './dtos/update-checklist-item.dto';
 
 @ApiTags('체크리스트 항목')
-@Controller('checklist-item')
+@Controller('checklists/:checklistId/items')
 export class ChecklistItemController {
   constructor(private readonly checklistItemService: ChecklistItemService) {}
 
-  @Get('/:checklistId')
+  @Get('')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
@@ -30,7 +30,7 @@ export class ChecklistItemController {
     return this.checklistItemService.getChecklistItems(checklistId);
   }
 
-  @Post('/:checklistId')
+  @Post('')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
@@ -53,6 +53,7 @@ export class ChecklistItemController {
     description: '체크리스트 항목을 수정합니다. - title 필수',
   })
   async updateChecklistItem(
+    @Param('checklistId') checklistId: number,
     @Param('checklistItemId') checklistItemId: number,
     @Body() updateChecklistItemDto: UpdateChecklistItemDto,
   ) {
@@ -69,7 +70,10 @@ export class ChecklistItemController {
     summary: '체크리스트 항목 삭제',
     description: '체크리스트 항목을 삭제합니다.',
   })
-  async deleteChecklistItem(@Param('checklistItemId') checklistItemId: number) {
+  async deleteChecklistItem(
+    @Param('checklistId') checklistId: number,
+    @Param('checklistItemId') checklistItemId: number,
+  ) {
     return this.checklistItemService.deleteChecklistItem(checklistItemId);
   }
 }

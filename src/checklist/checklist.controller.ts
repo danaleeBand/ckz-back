@@ -15,11 +15,11 @@ import { CreateChecklistDto } from './dtos/create-checklist.dto';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 
 @ApiTags('체크리스트')
-@Controller('checklist')
+@Controller('folders/:folderId/checklists')
 export class ChecklistController {
   constructor(private readonly checklistService: ChecklistService) {}
 
-  @Post('/:folderId')
+  @Post('')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
@@ -44,6 +44,7 @@ export class ChecklistController {
   })
   async updateChecklist(
     @Req() req,
+    @Param('folderId') folderId: number,
     @Param('checklistId') checklistId: number,
     @Body() updateChecklistDto: UpdateChecklistDto,
   ) {
@@ -60,7 +61,11 @@ export class ChecklistController {
     summary: '체크리스트 삭제',
     description: '체크리스트를 삭제합니다.',
   })
-  async deleteChecklist(@Req() req, @Param('checklistId') checklistId: number) {
+  async deleteChecklist(
+    @Req() req,
+    @Param('folderId') folderId: number,
+    @Param('checklistId') checklistId: number,
+  ) {
     return this.checklistService.deleteChecklist(checklistId);
   }
 }
