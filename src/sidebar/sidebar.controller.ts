@@ -28,16 +28,15 @@ export class SidebarController {
           {
             id: 0,
             name: 'string',
-            defaultFolder: [
-              {
-                id: 0,
-                title: 'string',
-              },
-              {
-                id: 0,
-                title: 'string',
-              },
-            ],
+            defaultFolder: {
+              id: 0,
+              checklist: [
+                {
+                  id: 0,
+                  title: 'string',
+                },
+              ],
+            },
             folder: [
               {
                 id: 0,
