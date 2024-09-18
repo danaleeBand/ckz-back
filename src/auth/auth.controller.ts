@@ -1,13 +1,16 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
@@ -15,12 +18,17 @@ import {
 } from '@nestjs/swagger';
 import { Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/auth.service';
+import { TokenService } from './services/token.service';
+import { RefreshTokenDto } from './dtos/refresh-token.dto';
 
 @ApiTags('회원가입/로그인')
 @Controller('/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly tokenService: TokenService,
+  ) {}
 
   @Get('/kakao')
   @ApiOperation({
@@ -33,7 +41,7 @@ export class AuthController {
     res.redirect(url);
   }
 
-  @Get('kakao/token')
+  @Get('/kakao/token')
   @UseGuards(AuthGuard('kakao'))
   @ApiOperation({
     summary: '카카오 인증',
@@ -59,7 +67,7 @@ export class AuthController {
     @Req() req,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.getJwtToken(
+    const { accessToken, refreshToken } = await this.tokenService.getJwtToken(
       req.user,
     );
 
@@ -83,7 +91,7 @@ export class AuthController {
     res.redirect(url);
   }
 
-  @Get('google/token')
+  @Get('/google/token')
   @UseGuards(AuthGuard('google'))
   @ApiOperation({
     summary: '구글 인증',
@@ -100,15 +108,43 @@ export class AuthController {
     schema: {
       example: {
         accessToken: 'access_token',
-        refreshToken: 'refresh_token',
       },
     },
   })
   @HttpCode(HttpStatus.OK)
-  async googleAuthCallBack(@Req() req) {
-    const { accessToken, refreshToken } = await this.authService.getJwtToken(
+  async googleAuthCallBack(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } = await this.tokenService.getJwtToken(
       req.user,
     );
-    return { accessToken, refreshToken };
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+    });
+
+    return { accessToken };
+  }
+
+  @Post('/refresh-token')
+  @ApiOperation({
+    summary: '토큰 갱신',
+    description: '토큰 갱신',
+  })
+  @ApiOkResponse({
+    description: '성공',
+    schema: {
+      example: {
+        accessToken: 'new_access_token',
+      },
+    },
+  })
+  @HttpCode(HttpStatus.OK)
+  async refreshToken(@Req() req, @Body() refreshTokenDto: RefreshTokenDto) {
+    const { refreshToken } = refreshTokenDto;
+    const accessToken = await this.tokenService.getNewAccessToken(refreshToken);
+    return { accessToken };
   }
 }

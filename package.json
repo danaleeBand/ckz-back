@@ -38,6 +38,7 @@
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
     "eslint-plugin-import": "^2.29.1",
+    "jwt-decode": "^4.0.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",

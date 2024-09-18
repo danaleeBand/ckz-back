@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { WorkspaceUser } from '../entities/workspace-user.entity';
-import { User } from '../../user/entities/user.entity';
+import { User } from '../../user/user.entity';
 import { Workspace } from '../entities/workspace.entity';
 
 @Injectable()

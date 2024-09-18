@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, EntityManager } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User } from './user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { FolderService } from '../folder/folder.service';
@@ -9,15 +9,12 @@ import { ChecklistItemService } from '../checklist-item/checklist-item.service';
 import { WorkspaceUserService } from '../workspace/services/workspace_user.service';
 import { ChecklistService } from '../checklist/checklist.service';
 import { PermissionService } from '../permission/permission.service';
-import { RefreshToken } from './entities/refresh-token.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(RefreshToken)
-    private refreshTokenRepository: Repository<RefreshToken>,
     private workspaceService: WorkspaceService,
     private folderService: FolderService,
     private checklistService: ChecklistService,
@@ -111,20 +108,5 @@ export class UserService {
         manager,
       );
     });
-  }
-
-  async createRefreshToken(
-    user_id: number,
-    refreshToken: string,
-    expiresAt: Date,
-  ) {
-    const user = await this.findOneUser(user_id);
-
-    const token = new RefreshToken();
-    token.user = user;
-    token.refresh_token = refreshToken;
-    token.expires_at = expiresAt;
-
-    return this.refreshTokenRepository.save(token);
   }
 }
