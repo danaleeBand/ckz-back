@@ -29,8 +29,6 @@ export class SidebarService {
         folder: await this.findFolderList(item.workspace),
       })),
     );
-    // console.log('workspace>>');
-    // console.log(folders);
     return workspaces;
   }
 
