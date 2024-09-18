@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource, EntityManager } from 'typeorm';
-import { User } from './user.entity';
+import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { FolderService } from '../folder/folder.service';
