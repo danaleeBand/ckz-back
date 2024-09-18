@@ -55,11 +55,21 @@ export class AuthController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  async kakaoAuthCallback(@Req() req) {
+  async kakaoAuthCallback(
+    @Req() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const { accessToken, refreshToken } = await this.authService.getJwtToken(
       req.user,
     );
-    return { accessToken, refreshToken };
+
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+    });
+
+    return { accessToken };
   }
 
   @Get('/google')
