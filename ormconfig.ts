@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import { User } from './src/user/user.entity';
-import { Auth } from './src/auth/auth.entity';
+import { Auth } from './src/auth/entities/auth.entity';
 import { Workspace } from './src/workspace/entities/workspace.entity';
 import { WorkspaceUser } from './src/workspace/entities/workspace-user.entity';
 import { Folder } from './src/folder/folder.entity';

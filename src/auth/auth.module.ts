@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { KakaoStrategy } from './strategies/kakao.strategy';
-import { Auth } from './auth.entity';
+import { Auth } from './entities/auth.entity';
 import { UserModule } from '../user/user.module';
 import { GoogleStrategy } from './strategies/google.strategy';
 
