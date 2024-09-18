@@ -3,25 +3,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthController } from './auth/auth.controller';
 import { AuthModule } from './auth/auth.module';
-import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
-import { AuthService } from './auth/auth.service';
-import { Auth } from './auth/auth.entity';
+import { Auth } from './auth/entities/auth.entity';
 import { CommonModule } from './common.module';
-import { SidebarController } from './sidebar/sidebar.controller';
-import { SidebarService } from './sidebar/sidebar.service';
-import { WorkspaceService } from './workspace/services/workspace.service';
 import { WorkspaceModule } from './workspace/workspace.module';
-import { FolderService } from './folder/folder.service';
 import { FolderModule } from './folder/folder.module';
 import { ChecklistModule } from './checklist/checklist.module';
-import { ChecklistItemService } from './checklist-item/checklist-item.service';
-import { WorkspaceUserService } from './workspace/services/workspace_user.service';
 import { SidebarModule } from './sidebar/sidebar.module';
 import { ChecklistItemModule } from './checklist-item/checklist-item.module';
-import { ChecklistService } from './checklist/checklist.service';
 import { PermissionModule } from './permission/permission.module';
 
 @Module({
@@ -52,17 +42,7 @@ import { PermissionModule } from './permission/permission.module';
     ChecklistItemModule,
     PermissionModule,
   ],
-  controllers: [AppController, AuthController, SidebarController],
-  providers: [
-    AppService,
-    UserService,
-    AuthService,
-    WorkspaceService,
-    WorkspaceUserService,
-    SidebarService,
-    FolderService,
-    ChecklistService,
-    ChecklistItemService,
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

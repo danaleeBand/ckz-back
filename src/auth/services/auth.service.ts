@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
-import { JwtService } from '@nestjs/jwt';
-import { UserService } from '../user/user.service';
-import { Auth, Provider } from './auth.entity';
-import { User } from '../user/user.entity';
+import { UserService } from '../../user/user.service';
+import { Auth, Provider } from '../entities/auth.entity';
+import { User } from '../../user/user.entity';
+import { TokenService } from './token.service';
 
 @Injectable()
 export class AuthService {
@@ -12,8 +12,8 @@ export class AuthService {
     @InjectRepository(Auth)
     private AuthRepository: Repository<Auth>,
     private userService: UserService,
+    private readonly tokenService: TokenService,
     private dataSource: DataSource,
-    private readonly jwtService: JwtService,
   ) {}
 
   async validateKakaoUser(user: any): Promise<any> {
@@ -117,27 +117,5 @@ export class AuthService {
     auth.access_token = accessToken;
     auth.refresh_token = refreshToken;
     await this.AuthRepository.save(auth);
-  }
-
-  async getJwtToken(
-    user: any,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
-    const accessToken = await this.getAccessToken(user);
-    const refreshToken = await this.getRefreshToken(user);
-    return { accessToken, refreshToken };
-  }
-
-  async getAccessToken(user: any): Promise<string> {
-    return this.jwtService.sign(
-      { id: user.id, name: user.name, profileImgUrl: user.profile_image_url },
-      { secret: process.env.ACCESS_TOKEN_SECRET_KEY, expiresIn: '1h' },
-    );
-  }
-
-  async getRefreshToken(user: any): Promise<string> {
-    return this.jwtService.sign(
-      { id: user.id, name: user.name, profileImgUrl: user.profile_image_url },
-      { secret: process.env.ACCESS_TOKEN_SECRET_KEY, expiresIn: '1w' },
-    );
   }
 }
