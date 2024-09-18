@@ -36,7 +36,7 @@ export class SidebarService {
 
   async findDefaultFolder(workspaceId: number) {
     const folderList = await this.folderService.findByWorkspaceId(workspaceId);
-    const defaultFolder = folderList.find((folder) => folder.isDefault);
+    const defaultFolder = folderList.find((folder) => folder.isDefault());
     return {
       id: defaultFolder.id,
       checklist: await this.findCheckLists(defaultFolder),
