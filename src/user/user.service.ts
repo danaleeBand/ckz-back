@@ -9,12 +9,15 @@ import { ChecklistItemService } from '../checklist-item/checklist-item.service';
 import { WorkspaceUserService } from '../workspace/services/workspace_user.service';
 import { ChecklistService } from '../checklist/checklist.service';
 import { PermissionService } from '../permission/permission.service';
+import { RefreshToken } from './entities/refresh-token.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(RefreshToken)
+    private refreshTokenRepository: Repository<RefreshToken>,
     private workspaceService: WorkspaceService,
     private folderService: FolderService,
     private checklistService: ChecklistService,
@@ -108,5 +111,20 @@ export class UserService {
         manager,
       );
     });
+  }
+
+  async createRefreshToken(
+    user_id: number,
+    refreshToken: string,
+    expiresAt: Date,
+  ) {
+    const user = await this.findOneUser(user_id);
+
+    const token = new RefreshToken();
+    token.user = user;
+    token.refresh_token = refreshToken;
+    token.expires_at = expiresAt;
+
+    return this.refreshTokenRepository.save(token);
   }
 }

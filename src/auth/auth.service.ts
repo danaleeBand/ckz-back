@@ -135,9 +135,16 @@ export class AuthService {
   }
 
   async getRefreshToken(user: any): Promise<string> {
-    return this.jwtService.sign(
+    const refreshToken = this.jwtService.sign(
       { id: user.id },
       { secret: process.env.ACCESS_TOKEN_SECRET_KEY, expiresIn: '1w' },
     );
+
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    await this.userService.createRefreshToken(user.id, refreshToken, expiresAt);
+
+    return refreshToken;
   }
 }

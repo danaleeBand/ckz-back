@@ -8,10 +8,11 @@ import { FolderModule } from '../folder/folder.module';
 import { ChecklistModule } from '../checklist/checklist.module';
 import { ChecklistItemModule } from '../checklist-item/checklist-item.module';
 import { PermissionModule } from '../permission/permission.module';
+import { RefreshToken } from './entities/refresh-token.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, RefreshToken]),
     WorkspaceModule,
     FolderModule,
     ChecklistModule,

@@ -12,7 +12,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'kakao' }),
-    TypeOrmModule.forFeature([Auth, ]),
+    TypeOrmModule.forFeature([Auth]),
     JwtModule.register({}),
     UserModule,
   ],
