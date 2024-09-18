@@ -136,7 +136,7 @@ export class AuthService {
 
   async getRefreshToken(user: any): Promise<string> {
     return this.jwtService.sign(
-      { id: user.id, name: user.name, profileImgUrl: user.profile_image_url },
+      { id: user.id },
       { secret: process.env.ACCESS_TOKEN_SECRET_KEY, expiresIn: '1w' },
     );
   }
