@@ -33,4 +33,8 @@ export class Folder {
 
   @Column({ type: 'varchar', nullable: false })
   permission_code: string;
+
+  isDefault(): boolean {
+    return this.is_default;
+  }
 }
