@@ -1,8 +1,8 @@
-import {IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateChecklistDto {
-  @ApiProperty({ type: String, description: '폴더 id' })
+  @ApiProperty({ type: Number, description: '폴더 id' })
   @IsNotEmpty()
   @IsNumber()
   folderId: number;
