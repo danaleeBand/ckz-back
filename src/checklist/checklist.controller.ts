@@ -15,11 +15,11 @@ import { CreateChecklistDto } from './dtos/create-checklist.dto';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 
 @ApiTags('체크리스트')
-@Controller('folders/:folderId/checklists')
+@Controller('checklists')
 export class ChecklistController {
   constructor(private readonly checklistService: ChecklistService) {}
 
-  @Post('')
+  @Post()
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @ApiOperation({
@@ -28,10 +28,9 @@ export class ChecklistController {
   })
   async createChecklist(
     @Req() req,
-    @Param('folderId') folderId: number,
     @Body() createChecklistDto: CreateChecklistDto,
   ) {
-    const { title } = createChecklistDto;
+    const { folderId, title } = createChecklistDto;
     return this.checklistService.createChecklist(folderId, title);
   }
 
@@ -44,7 +43,6 @@ export class ChecklistController {
   })
   async updateChecklist(
     @Req() req,
-    @Param('folderId') folderId: number,
     @Param('checklistId') checklistId: number,
     @Body() updateChecklistDto: UpdateChecklistDto,
   ) {
@@ -61,11 +59,7 @@ export class ChecklistController {
     summary: '체크리스트 삭제',
     description: '체크리스트를 삭제합니다.',
   })
-  async deleteChecklist(
-    @Req() req,
-    @Param('folderId') folderId: number,
-    @Param('checklistId') checklistId: number,
-  ) {
+  async deleteChecklist(@Req() req, @Param('checklistId') checklistId: number) {
     return this.checklistService.deleteChecklist(checklistId);
   }
 }

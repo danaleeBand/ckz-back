@@ -29,14 +29,12 @@ export class SidebarService {
         folder: await this.findFolderList(item.workspace),
       })),
     );
-    // console.log('workspace>>');
-    // console.log(folders);
     return workspaces;
   }
 
   async findDefaultFolder(workspaceId: number) {
     const folderList = await this.folderService.findByWorkspaceId(workspaceId);
-    const defaultFolder = folderList.find((folder) => folder.isDefault);
+    const defaultFolder = folderList.find((folder) => folder.isDefault());
     return {
       id: defaultFolder.id,
       checklist: await this.findCheckLists(defaultFolder),
