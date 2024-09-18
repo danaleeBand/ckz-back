@@ -8,7 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserService } from './user/user.service';
 import { UserModule } from './user/user.module';
 import { AuthService } from './auth/auth.service';
-import { Auth } from './auth/entities/auth.entity';
+import { Auth } from './auth/auth.entity';
 import { CommonModule } from './common.module';
 import { SidebarController } from './sidebar/sidebar.controller';
 import { SidebarService } from './sidebar/sidebar.service';

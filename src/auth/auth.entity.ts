@@ -5,7 +5,7 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { User } from '../../user/user.entity'; // User 엔터티의 경로에 맞게 수정해야 합니다.
+import { User } from '../user/user.entity'; // User 엔터티의 경로에 맞게 수정해야 합니다.
 
 export enum Provider {
   KAKAO = 'kakao',
