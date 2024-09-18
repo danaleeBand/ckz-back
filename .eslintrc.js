@@ -51,5 +51,6 @@ module.exports = {
     'import/no-absolute-path': 0, // 절대경로 사용 허용
     "class-methods-use-this": "off",
     "no-underscore-dangle": "off",
+    'import/no-cycle': ['warn', { maxDepth: 1 }],
   },
 };
