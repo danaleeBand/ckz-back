@@ -1,7 +1,9 @@
 import {
   Body,
   Controller,
+  Delete,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -43,5 +45,19 @@ export class FolderController {
     @Body() updateFolderDto: UpdateFolderDto,
   ) {
     return this.folderService.updateFolder(folderId, updateFolderDto);
+  }
+
+  @Delete('/:folderId')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: '폴더 삭제',
+    description: '폴더를 삭제합니다.',
+  })
+  async deleteFolder(
+    @Req() req,
+    @Param('folderId', ParseIntPipe) folderId: number,
+  ) {
+    return this.folderService.deleteFolder(folderId);
   }
 }

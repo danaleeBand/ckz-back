@@ -4,8 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Workspace } from '../workspace/entities/workspace.entity';
+import { Checklist } from '../checklist/checklist.entity';
 
 @Entity()
 export class Folder {
@@ -33,6 +35,9 @@ export class Folder {
 
   @Column({ type: 'varchar', nullable: false })
   permission_code: string;
+
+  @OneToMany(() => Checklist, (checklist) => checklist.folder)
+  checklists: Array<Checklist>;
 
   isDefault(): boolean {
     return this.is_default;

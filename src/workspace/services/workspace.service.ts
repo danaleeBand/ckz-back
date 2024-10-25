@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { Workspace } from '../entities/workspace.entity';
@@ -57,5 +57,25 @@ export class WorkspaceService {
       workspace.folder_order.push(folderId);
       await manager.save(workspace);
     }
+  }
+
+  async removeFolderFromWorkspaceOrder(
+    workspaceId: number,
+    folderId: number,
+    manager: EntityManager,
+  ): Promise<void> {
+    const workspace = await manager.findOne(Workspace, {
+      where: { id: workspaceId },
+    });
+
+    if (!workspace) {
+      throw new NotFoundException(`Workspace with ${workspaceId} not found`);
+    }
+
+    workspace.folder_order = workspace.folder_order.filter(
+      (id) => id !== folderId,
+    );
+
+    await manager.save(workspace);
   }
 }
