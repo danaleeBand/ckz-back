@@ -158,14 +158,10 @@ export class ChecklistService {
       throw new NotFoundException(`Checklist with ID ${checklistId} not found`);
     }
 
-    const index = checklist.item_order.indexOf(checklistItemId);
-    if (index > -1) {
-      checklist.item_order.splice(index, 1);
-      await manager.save(checklist);
-    } else {
-      throw new NotFoundException(
-        `ChecklistItem with ID ${checklistItemId} not found in checklist`,
-      );
-    }
+    checklist.item_order = checklist.item_order.filter(
+      (id) => id !== checklistItemId,
+    );
+
+    await manager.save(checklist);
   }
 }

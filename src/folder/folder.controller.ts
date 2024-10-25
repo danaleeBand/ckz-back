@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
   Req,
@@ -54,10 +53,7 @@ export class FolderController {
     summary: '폴더 삭제',
     description: '폴더를 삭제합니다.',
   })
-  async deleteFolder(
-    @Req() req,
-    @Param('folderId', ParseIntPipe) folderId: number,
-  ) {
+  async deleteFolder(@Req() req, @Param('folderId') folderId: number) {
     return this.folderService.deleteFolder(folderId);
   }
 }
