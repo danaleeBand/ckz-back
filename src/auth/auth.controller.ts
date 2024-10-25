@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,

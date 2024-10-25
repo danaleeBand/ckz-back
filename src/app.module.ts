@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -14,6 +15,7 @@ import { SidebarModule } from './sidebar/sidebar.module';
 import { ChecklistItemModule } from './checklist-item/checklist-item.module';
 import { PermissionModule } from './permission/permission.module';
 
+dotenv.config();
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -22,7 +24,7 @@ import { PermissionModule } from './permission/permission.module';
       port: parseInt(process.env.DATABASE_PORT, 10),
       username: process.env.DATABASE_USERNAME,
       password: process.env.DATABASE_PASSWORD,
-      database: 'checkuiz',
+      database: process.env.DATABASE_NAME,
       logging: 'all',
       entities: [`${__dirname}/**/*.entity{.ts,.js}`],
       synchronize: false,
