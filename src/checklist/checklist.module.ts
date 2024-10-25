@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Checklist } from './checklist.entity';
 import { ChecklistService } from './checklist.service';
@@ -6,7 +6,10 @@ import { FolderModule } from '../folder/folder.module';
 import { ChecklistController } from './checklist.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Checklist]), FolderModule],
+  imports: [
+    TypeOrmModule.forFeature([Checklist]),
+    forwardRef(() => FolderModule),
+  ],
   providers: [ChecklistService],
   exports: [ChecklistService, TypeOrmModule],
   controllers: [ChecklistController],

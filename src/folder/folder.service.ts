@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { Folder } from './folder.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
+import { ChecklistService } from '../checklist/checklist.service';
 
 @Injectable()
 export class FolderService {
@@ -11,6 +17,8 @@ export class FolderService {
     @InjectRepository(Folder)
     private readonly folderRepository: Repository<Folder>,
     private readonly workspaceService: WorkspaceService,
+    @Inject(forwardRef(() => ChecklistService))
+    private readonly checklistService: ChecklistService,
     private dataSource: DataSource,
   ) {}
 
@@ -26,6 +34,21 @@ export class FolderService {
   async findByWorkspaceId(workspaceId: number): Promise<Array<Folder>> {
     return this.folderRepository.find({
       where: { workspace: { id: workspaceId } },
+    });
+  }
+
+  async findByWorkspaceIdDefault(
+    workspaceId: number,
+    manager?: EntityManager,
+  ): Promise<Folder> {
+    if (manager) {
+      return manager.findOne(Folder, {
+        where: { workspace: { id: workspaceId }, is_default: true },
+      });
+    }
+
+    return this.folderRepository.findOne({
+      where: { workspace: { id: workspaceId }, is_default: true },
     });
   }
 
@@ -79,6 +102,25 @@ export class FolderService {
     }
   }
 
+  async addChecklistsToFolderOrder(
+    folderId: number,
+    checklistIds: Array<number>,
+    manager: EntityManager,
+  ) {
+    const folder = await manager.findOne(Folder, {
+      where: { id: folderId },
+    });
+
+    const newChecklistIds = checklistIds.filter(
+      (checklistId) => !folder.checklist_order.includes(checklistId),
+    );
+
+    if (newChecklistIds.length > 0) {
+      folder.checklist_order.push(...newChecklistIds);
+      await manager.save(folder);
+    }
+  }
+
   async removeChecklistToFolderOrder(
     folderId: number,
     checklistId: number,
@@ -111,5 +153,45 @@ export class FolderService {
     folder.name = name;
 
     return this.folderRepository.save(folder);
+  }
+
+  async deleteFolder(folderId: number): Promise<void> {
+    await this.dataSource.transaction(async (manager: EntityManager) => {
+      const folder = await manager.findOne(Folder, {
+        where: { id: folderId },
+        relations: ['workspace', 'checklists'],
+      });
+
+      if (!folder) {
+        throw new NotFoundException(`Folder with ID ${folderId} not found`);
+      }
+
+      await this.workspaceService.removeFolderFromWorkspaceOrder(
+        folder.workspace.id,
+        folderId,
+        manager,
+      );
+
+      if (folder.checklists.length > 0) {
+        const defaultFolder = await this.findByWorkspaceIdDefault(
+          folder.workspace.id,
+          manager,
+        );
+
+        await this.checklistService.updateChecklistsFolderId(
+          folder.checklist_order,
+          defaultFolder,
+          manager,
+        );
+
+        await this.addChecklistsToFolderOrder(
+          defaultFolder.id,
+          folder.checklist_order,
+          manager,
+        );
+      }
+
+      await manager.remove(Folder, folder);
+    });
   }
 }

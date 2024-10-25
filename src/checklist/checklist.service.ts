@@ -1,15 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { DataSource, EntityManager, In, Repository } from 'typeorm';
 import { Checklist } from './checklist.entity';
 import { FolderService } from '../folder/folder.service';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
+import { Folder } from '../folder/folder.entity';
 
 @Injectable()
 export class ChecklistService {
   constructor(
     @InjectRepository(Checklist)
     private readonly checklistRepository: Repository<Checklist>,
+    @Inject(forwardRef(() => FolderService))
     private readonly folderService: FolderService,
     private dataSource: DataSource,
   ) {}
@@ -78,6 +85,14 @@ export class ChecklistService {
 
     checklist.item_order = checklistItemIds;
     await manager.save(checklist);
+  }
+
+  async updateChecklistsFolderId(
+    checklistIds: Array<number>,
+    folder: Folder,
+    manager: EntityManager,
+  ) {
+    await manager.update(Checklist, { id: In(checklistIds) }, { folder });
   }
 
   async updateChecklist(
