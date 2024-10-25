@@ -33,7 +33,9 @@ export class ChecklistItem {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  @ManyToOne(() => Checklist)
+  @ManyToOne(() => Checklist, (checklist) => checklist.items, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'checklist_id' })
   checklist: Checklist;
 

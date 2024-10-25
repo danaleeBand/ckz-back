@@ -4,8 +4,10 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { Folder } from '../folder/folder.entity';
+import { ChecklistItem } from '../checklist-item/checklist-item.entity';
 
 @Entity()
 export class Checklist {
@@ -27,6 +29,11 @@ export class Checklist {
   @ManyToOne(() => Folder)
   @JoinColumn({ name: 'folder_id' })
   folder: Folder;
+
+  @OneToMany(() => ChecklistItem, (checklistItem) => checklistItem.checklist, {
+    cascade: true,
+  })
+  items: Array<ChecklistItem>;
 
   @Column({ type: 'varchar', nullable: false })
   permission_code: string;
