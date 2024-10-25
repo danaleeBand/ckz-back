@@ -134,15 +134,11 @@ export class FolderService {
       throw new NotFoundException(`Folder with ID ${folderId} not found`);
     }
 
-    const index = folder.checklist_order.indexOf(checklistId);
-    if (index > -1) {
-      folder.checklist_order.splice(index, 1);
-      await manager.save(folder);
-    } else {
-      throw new NotFoundException(
-        `Checklist with ID ${checklistId} not found in folder`,
-      );
-    }
+    folder.checklist_order = folder.checklist_order.filter(
+      (id) => id !== checklistId,
+    );
+
+    await manager.save(folder);
   }
 
   async updateFolder(folderId: number, dto: UpdateFolderDto): Promise<Folder> {
@@ -168,7 +164,7 @@ export class FolderService {
 
       await this.workspaceService.removeFolderFromWorkspaceOrder(
         folder.workspace.id,
-        folderId,
+        folder.id,
         manager,
       );
 
