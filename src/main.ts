@@ -5,6 +5,7 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 dotenv.config();
@@ -38,8 +39,11 @@ async function bootstrap() {
 
   SwaggerModule.setup('api-docs', app, document, swaggerOptions);
 
+  app.use(cookieParser());
+
   app.enableCors({
     origin: [process.env.CLIENT_URL],
+    credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
