@@ -10,7 +10,7 @@ export class WorkspaceService {
     @InjectRepository(Workspace)
     private workspaceRepository: Repository<Workspace>,
     @InjectRepository(WorkspaceUser)
-    private readonly userWorkspaceRepository: Repository<WorkspaceUser>,
+    private readonly workspaceUserRepository: Repository<WorkspaceUser>,
   ) {}
 
   async createWorkspace(
@@ -39,7 +39,7 @@ export class WorkspaceService {
   }
 
   async findByUserId(userId: number): Promise<Array<WorkspaceUser>> {
-    return this.userWorkspaceRepository.find({
+    return this.workspaceUserRepository.find({
       where: { user: { id: userId } },
       relations: ['workspace'],
     });
