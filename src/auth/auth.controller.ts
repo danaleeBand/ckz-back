@@ -7,6 +7,7 @@ import {
   Post,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -15,7 +16,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
@@ -141,8 +142,14 @@ export class AuthController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  async refreshToken(@Req() req, @Body() refreshTokenDto: RefreshTokenDto) {
-    const { refreshToken } = refreshTokenDto;
+  async refreshAccessToken(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token이 없습니다.');
+    }
     const accessToken = await this.tokenService.getNewAccessToken(refreshToken);
     return { accessToken };
   }
