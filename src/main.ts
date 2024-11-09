@@ -6,9 +6,14 @@ import {
 } from '@nestjs/swagger';
 import * as dotenv from 'dotenv';
 import * as cookieParser from 'cookie-parser';
+import * as fs from 'fs';
 import { AppModule } from './app.module';
 
-dotenv.config();
+const envFilePath = `.env.${process.env.NODE_ENV || 'development'}`;
+dotenv.config({ path: '.env' });
+if (fs.existsSync(envFilePath)) {
+  dotenv.config({ path: envFilePath });
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -45,9 +50,9 @@ async function bootstrap() {
     origin: [process.env.CLIENT_URL],
     credentials: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept, Authorization',
+    allowedHeaders: 'Content-Type, Accept, Authorization, Cookie',
   });
 
-  await app.listen(8000);
+  await app.listen(8000, 'localhost');
 }
 bootstrap();
