@@ -5,6 +5,13 @@ import { WorkspaceService } from '../workspace/services/workspace.service';
 import { WorkspaceUser } from '../workspace/entities/workspace-user.entity';
 import { Workspace } from '../workspace/entities/workspace.entity';
 import { Folder } from '../folder/folder.entity';
+import {
+  GetChecklistDto,
+  GetDefaultFolderDto,
+  GetFolderDto,
+  GetSidebarDto,
+  GetWorkspaceDto,
+} from "./dtos/get-sidebar.dto";
 
 @Injectable()
 export class SidebarService {
@@ -14,34 +21,34 @@ export class SidebarService {
     private readonly checklistService: ChecklistService,
   ) {}
 
-  async findSidebarTree(userId: number) {
+  async getSidebarTree(userId: number): Promise<GetSidebarDto> {
     const workspaces = await this.findWorkspaces(userId);
-    return { workspace: workspaces };
+    return { workspaces };
   }
 
-  async findWorkspaces(userId: number) {
+  async findWorkspaces(userId: number): Promise<GetWorkspaceDto[]> {
     const userWorkspaces = await this.workspaceService.findByUserId(userId);
     const workspaces = await Promise.all(
       userWorkspaces.map(async (item: WorkspaceUser) => ({
         id: item.workspace.id,
         name: item.workspace.name,
         defaultFolder: await this.findDefaultFolder(item.workspace.id),
-        folder: await this.findFolderList(item.workspace),
+        folders: await this.findFolderList(item.workspace),
       })),
     );
     return workspaces;
   }
 
-  async findDefaultFolder(workspaceId: number) {
+  async findDefaultFolder(workspaceId: number): Promise<GetDefaultFolderDto> {
     const folderList = await this.folderService.findByWorkspaceId(workspaceId);
     const defaultFolder = folderList.find((folder) => folder.isDefault());
     return {
       id: defaultFolder.id,
-      checklist: await this.findCheckLists(defaultFolder),
+      checklists: await this.findCheckLists(defaultFolder),
     };
   }
 
-  async findFolderList(workspace: Workspace) {
+  async findFolderList(workspace: Workspace): Promise<GetFolderDto[]> {
     const folders = await this.folderService.findByWorkspaceId(workspace.id);
 
     const sortedFolders = workspace.folder_order
@@ -51,13 +58,13 @@ export class SidebarService {
     const folderList = sortedFolders.map(async (folder) => ({
       id: folder.id,
       name: folder.name,
-      checklist: await this.findCheckLists(folder),
+      checklists: await this.findCheckLists(folder),
     }));
 
     return Promise.all(folderList);
   }
 
-  async findCheckLists(folder: Folder) {
+  async findCheckLists(folder: Folder): Promise<GetChecklistDto[]> {
     const checklists = await this.checklistService.findByFolderId(folder.id);
     const sortedChecklists = folder.checklist_order.map((checklistId) =>
       checklists.find((checklist) => checklist.id === checklistId),
