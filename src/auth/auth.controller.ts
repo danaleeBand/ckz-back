@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -20,7 +19,6 @@ import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
-import { RefreshTokenDto } from './dtos/refresh-token.dto';
 
 @ApiTags('회원가입/로그인')
 @Controller('/auth')
