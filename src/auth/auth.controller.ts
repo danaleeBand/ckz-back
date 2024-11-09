@@ -3,7 +3,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Post,
   Req,
   Res,
   UnauthorizedException,
@@ -71,8 +70,9 @@ export class AuthController {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
+      secure: process.env.REFRESH_TOKEN_SECURE === 'true',
+      sameSite: process.env.REFRESH_TOKEN_SAMESITE as 'lax' | 'strict' | 'none',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1w
     });
 
     return { accessToken };
@@ -119,14 +119,15 @@ export class AuthController {
     );
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
+      secure: process.env.REFRESH_TOKEN_SECURE === 'true',
+      sameSite: process.env.REFRESH_TOKEN_SAMESITE as 'lax' | 'strict' | 'none',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1w
     });
 
     return { accessToken };
   }
 
-  @Post('/refresh-token')
+  @Get('/refresh-token')
   @ApiOperation({
     summary: '토큰 갱신',
     description: '토큰 갱신',
