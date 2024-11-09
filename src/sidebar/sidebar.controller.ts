@@ -7,6 +7,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { SidebarService } from './sidebar.service';
+import { GetSidebarDto } from './dtos/get-sidebar.dto';
 
 @ApiTags('사이드바')
 @Controller('/sidebar')
@@ -22,44 +23,10 @@ export class SidebarController {
   })
   @ApiOkResponse({
     description: '사용자의 체크리스트를 사이드바 트리구조로 조회한다.',
-    schema: {
-      example: {
-        workspace: [
-          {
-            id: 0,
-            name: 'string',
-            defaultFolder: {
-              id: 0,
-              checklist: [
-                {
-                  id: 0,
-                  title: 'string',
-                },
-              ],
-            },
-            folder: [
-              {
-                id: 0,
-                name: 'string',
-                checklist: [
-                  {
-                    id: 0,
-                    title: 'string',
-                  },
-                  {
-                    id: 0,
-                    title: 'string',
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    },
+    type: GetSidebarDto,
   })
   async getCheckListTree(@Req() req) {
     const userId = req.user.id;
-    return this.sidebarService.findSidebarTree(userId);
+    return this.sidebarService.getSidebarTree(userId);
   }
 }

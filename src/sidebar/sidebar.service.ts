@@ -1,70 +1,94 @@
 import { Injectable } from '@nestjs/common';
 import { FolderService } from '../folder/folder.service';
-import { ChecklistService } from '../checklist/checklist.service';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { WorkspaceUser } from '../workspace/entities/workspace-user.entity';
-import { Workspace } from '../workspace/entities/workspace.entity';
-import { Folder } from '../folder/folder.entity';
+import { GetSidebarDto } from './dtos/get-sidebar.dto';
+import { GetWorkspaceDto } from './dtos/get-workspace.dto';
+import { GetDefaultFolderDto } from './dtos/get-default-folder.dto';
+import { GetFolderDto } from './dtos/get-folder.dto';
+import { GetChecklistDto } from './dtos/get-checklist.dto';
 
 @Injectable()
 export class SidebarService {
   constructor(
     private readonly workspaceService: WorkspaceService,
     private readonly folderService: FolderService,
-    private readonly checklistService: ChecklistService,
   ) {}
 
-  async findSidebarTree(userId: number) {
+  async getSidebarTree(userId: number): Promise<GetSidebarDto> {
     const workspaces = await this.findWorkspaces(userId);
-    return { workspace: workspaces };
+    return { workspaces };
   }
 
-  async findWorkspaces(userId: number) {
+  async findWorkspaces(userId: number): Promise<Array<GetWorkspaceDto>> {
     const userWorkspaces = await this.workspaceService.findByUserId(userId);
     const workspaces = await Promise.all(
-      userWorkspaces.map(async (item: WorkspaceUser) => ({
-        id: item.workspace.id,
-        name: item.workspace.name,
-        defaultFolder: await this.findDefaultFolder(item.workspace.id),
-        folder: await this.findFolderList(item.workspace),
-      })),
+      userWorkspaces.map(async (workspaceUser: WorkspaceUser) => {
+        const { id, name } = workspaceUser.workspace;
+        const [defaultFolder, folders] = await Promise.all([
+          this.findDefaultFolder(id),
+          this.findFolderList(id),
+        ]);
+
+        return {
+          id,
+          name,
+          defaultFolder,
+          folders,
+        };
+      }),
     );
     return workspaces;
   }
 
-  async findDefaultFolder(workspaceId: number) {
-    const folderList = await this.folderService.findByWorkspaceId(workspaceId);
-    const defaultFolder = folderList.find((folder) => folder.isDefault());
+  async findDefaultFolder(workspaceId: number): Promise<GetDefaultFolderDto> {
+    const defaultFolder =
+      await this.folderService.findDefaultFolderByWorkspaceIdWithChecklist(
+        workspaceId,
+      );
+
+    const { id, checklist_order: checklistOrder, checklists } = defaultFolder;
+    const sortedChecklists = this.sortChecklistsByOrder(
+      checklistOrder,
+      checklists,
+    );
+
     return {
-      id: defaultFolder.id,
-      checklist: await this.findCheckLists(defaultFolder),
+      id,
+      checklists: sortedChecklists,
     };
   }
 
-  async findFolderList(workspace: Workspace) {
-    const folders = await this.folderService.findByWorkspaceId(workspace.id);
+  async findFolderList(workspaceId: number): Promise<Array<GetFolderDto>> {
+    const folders =
+      await this.folderService.findByWorkspaceIdWithChecklist(workspaceId);
 
-    const sortedFolders = workspace.folder_order
-      .map((folderId) => folders.find((folder) => folder.id === folderId))
-      .filter((folder) => folder && !folder.isDefault());
+    const sortedFoldersChecklists = folders.map((folder) => {
+      const { id, name, checklist_order: checklistOrder, checklists } = folder;
+      const sortedChecklists = this.sortChecklistsByOrder(
+        checklistOrder,
+        checklists,
+      );
 
-    const folderList = sortedFolders.map(async (folder) => ({
-      id: folder.id,
-      name: folder.name,
-      checklist: await this.findCheckLists(folder),
-    }));
-
-    return Promise.all(folderList);
+      return {
+        id,
+        name,
+        checklists: sortedChecklists,
+      };
+    });
+    return sortedFoldersChecklists;
   }
 
-  async findCheckLists(folder: Folder) {
-    const checklists = await this.checklistService.findByFolderId(folder.id);
-    const sortedChecklists = folder.checklist_order.map((checklistId) =>
-      checklists.find((checklist) => checklist.id === checklistId),
+  private sortChecklistsByOrder(
+    checklistOrder: Array<number>,
+    checklists: Array<GetChecklistDto>,
+  ): Array<GetChecklistDto> {
+    const checklistMap = new Map(
+      checklists.map((checklist) => [checklist.id, checklist]),
     );
-    return sortedChecklists.map((checklist) => ({
-      id: checklist.id,
-      title: checklist.title,
-    }));
+
+    return checklistOrder
+      .map((checklistId) => checklistMap.get(checklistId))
+      .filter((checklist) => checklist !== undefined);
   }
 }

@@ -26,7 +26,7 @@ module.exports = {
     'no-var': 2, // var 금지
     eqeqeq: 2, // 일치 연산자 사용 필수
     'no-extra-semi': 'error', // 불필요한 세미콜론 사용 시 에러 표시
-    'arrow-parens': [1, 'as-needed'], // 화살표 함수의 파라미터가 하나일때 괄호 생략
+    'arrow-parens': ['error', 'always'],
     'no-unused-vars': 1, // 사용하지 않는 변수가 있을 때 발생하는 경고
     'no-console': 0, // 콘솔 사용 시 발생하는 경고 비활성화
     'import/prefer-default-export': 0, // export문이 하나일 때 default export 사용 권장 경고 비활성화

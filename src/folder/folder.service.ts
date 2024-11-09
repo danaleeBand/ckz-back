@@ -37,6 +37,41 @@ export class FolderService {
     });
   }
 
+  async findDefaultFolderByWorkspaceIdWithChecklist(
+    workspaceId: number,
+  ): Promise<Folder> {
+    return this.folderRepository.findOne({
+      where: { workspace: { id: workspaceId }, is_default: true },
+      relations: ['checklists'],
+      select: {
+        id: true,
+        checklist_order: true,
+        checklists: {
+          id: true,
+          title: true,
+        },
+      },
+    });
+  }
+
+  async findByWorkspaceIdWithChecklist(
+    workspaceId: number,
+  ): Promise<Array<Folder>> {
+    return this.folderRepository.find({
+      where: { workspace: { id: workspaceId }, is_default: false },
+      relations: ['checklists'],
+      select: {
+        id: true,
+        name: true,
+        checklist_order: true,
+        checklists: {
+          id: true,
+          title: true,
+        },
+      },
+    });
+  }
+
   async findByWorkspaceIdDefault(
     workspaceId: number,
     manager?: EntityManager,
