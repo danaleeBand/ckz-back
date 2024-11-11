@@ -14,14 +14,14 @@ import { ChecklistService } from './checklist.service';
 import { CreateChecklistDto } from './dtos/create-checklist.dto';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 
-@ApiTags('체크리스트')
 @Controller('checklists')
+@ApiTags('체크리스트')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('access-token')
 export class ChecklistController {
   constructor(private readonly checklistService: ChecklistService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '체크리스트 생성',
     description: '체크리스트를 생성합니다.',
@@ -35,8 +35,6 @@ export class ChecklistController {
   }
 
   @Patch('/:checklistId')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '체크리스트 수정',
     description: '체크리스트를 수정합니다.',
@@ -53,8 +51,6 @@ export class ChecklistController {
   }
 
   @Delete('/:checklistId')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '체크리스트 삭제',
     description: '체크리스트를 삭제합니다.',

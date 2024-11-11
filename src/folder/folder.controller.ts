@@ -16,12 +16,12 @@ import { UpdateFolderDto } from './dtos/update-folder.dto';
 
 @Controller('folders')
 @ApiTags('폴더')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('access-token')
 export class FolderController {
   constructor(private readonly folderService: FolderService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '폴더 생성',
     description: '폴더를 생성합니다.',
@@ -32,8 +32,6 @@ export class FolderController {
   }
 
   @Patch('/:folderId')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '폴더 수정',
     description: '폴더를 수정합니다.',
@@ -47,8 +45,6 @@ export class FolderController {
   }
 
   @Delete('/:folderId')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '폴더 삭제',
     description: '폴더를 삭제합니다.',

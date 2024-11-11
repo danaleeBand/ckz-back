@@ -9,14 +9,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { SidebarService } from './sidebar.service';
 import { GetSidebarDto } from './dtos/get-sidebar.dto';
 
-@ApiTags('사이드바')
 @Controller('/sidebar')
+@ApiTags('사이드바')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('access-token')
 export class SidebarController {
   constructor(private readonly sidebarService: SidebarService) {}
 
   @Get('/tree')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '사이드바 트리 조회',
     description: '사이드바 트리 조회',

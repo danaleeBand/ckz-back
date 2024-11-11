@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -9,6 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
@@ -128,6 +130,8 @@ export class AuthController {
   }
 
   @Get('/refresh-token')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '토큰 갱신',
     description: '토큰 갱신',
@@ -151,5 +155,26 @@ export class AuthController {
     }
     const accessToken = await this.tokenService.getNewAccessToken(refreshToken);
     return { accessToken };
+  }
+
+  @Delete('/logout')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: '로그아웃',
+    description: '로그아웃',
+  })
+  @ApiOkResponse({ description: '성공' })
+  @HttpCode(HttpStatus.OK)
+  async logout(@Req() req, @Res({ passthrough: true }) res: Response) {
+    const userId = req.user.id;
+    await this.tokenService.deleteRefreshToken(userId);
+
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.REFRESH_TOKEN_SECURE === 'true',
+      sameSite: process.env.REFRESH_TOKEN_SAMESITE as 'lax' | 'strict' | 'none',
+    });
+    return true;
   }
 }
