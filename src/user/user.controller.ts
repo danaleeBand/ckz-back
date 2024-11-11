@@ -10,14 +10,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
 
-@ApiTags('사용자')
 @Controller('/users')
+@ApiTags('사용자')
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth('access-token')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '내 정보 조회',
     description: '내 정보 조회',
@@ -39,8 +39,6 @@ export class UserController {
   }
 
   @Patch('/')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
   @ApiOperation({
     summary: '내 정보 수정',
     description: '내 정보 수정',
