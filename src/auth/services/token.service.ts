@@ -93,4 +93,8 @@ export class TokenService {
 
     return this.refreshTokenRepository.save(token);
   }
+
+  async deleteRefreshToken(userId: number) {
+    return this.refreshTokenRepository.delete({ user: { id: userId } });
+  }
 }
