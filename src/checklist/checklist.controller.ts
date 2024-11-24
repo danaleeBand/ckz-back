@@ -13,6 +13,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ChecklistService } from './checklist.service';
 import { CreateChecklistDto } from './dtos/create-checklist.dto';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
+import { ChangeChecklistOrderDto } from './dtos/change-checklist-order.dto';
 
 @Controller('checklists')
 @ApiTags('체크리스트')
@@ -57,5 +58,20 @@ export class ChecklistController {
   })
   async deleteChecklist(@Req() req, @Param('checklistId') checklistId: number) {
     return this.checklistService.deleteChecklist(checklistId);
+  }
+
+  @Post('/:checklistId')
+  @ApiOperation({
+    summary: '체크리스트 순서 변경',
+    description: '체크리스트 순서를 변경합니다.',
+  })
+  async changeChecklistOrder(
+    @Param('checklistId') checklistId: number,
+    @Body() changeChecklistOrderDto: ChangeChecklistOrderDto,
+  ) {
+    return this.checklistService.changeChecklistOrder(
+      Number(checklistId),
+      changeChecklistOrderDto,
+    );
   }
 }

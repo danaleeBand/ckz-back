@@ -10,6 +10,7 @@ import { Folder } from './folder.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
 import { ChecklistService } from '../checklist/checklist.service';
+import { ChangeFolderOrderDto } from './dtos/change-folder-order.dto';
 
 @Injectable()
 export class FolderService {
@@ -225,5 +226,42 @@ export class FolderService {
 
       await manager.remove(Folder, folder);
     });
+  }
+
+  async changeFolderOrder(
+    folderId: number,
+    dto: ChangeFolderOrderDto,
+  ): Promise<void> {
+    const { order } = dto;
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId },
+      relations: ['workspace'],
+    });
+
+    await this.workspaceService.changeFolderOrder(
+      folder.workspace.id,
+      folder.id,
+      order,
+    );
+  }
+
+  async changeChecklistOrder(
+    currentFolderId: number,
+    folderId: number,
+    checklistId: number,
+    order: number,
+  ): Promise<void> {
+    const currentFolder = await this.findById(currentFolderId);
+    const originOrder = currentFolder.checklist_order.indexOf(checklistId);
+    const targetFolder =
+      currentFolderId === folderId
+        ? currentFolder
+        : await this.findById(folderId);
+
+    currentFolder.checklist_order.splice(originOrder, 1);
+    targetFolder.checklist_order.splice(order, 0, checklistId);
+
+    await this.folderRepository.save(currentFolder);
+    await this.folderRepository.save(targetFolder);
   }
 }

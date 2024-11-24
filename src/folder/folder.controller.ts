@@ -13,6 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FolderService } from './folder.service';
 import { CreateFolderDto } from './dtos/create-folder.dto';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
+import { ChangeFolderOrderDto } from './dtos/change-folder-order.dto';
 
 @Controller('folders')
 @ApiTags('폴더')
@@ -51,5 +52,17 @@ export class FolderController {
   })
   async deleteFolder(@Req() req, @Param('folderId') folderId: number) {
     return this.folderService.deleteFolder(folderId);
+  }
+
+  @Post('/:folderId')
+  @ApiOperation({
+    summary: '폴더 순서 변경',
+    description: '폴더 순서를 변경합니다.',
+  })
+  async changeFolderOrder(
+    @Param('folderId') folderId: number,
+    @Body() changeFolderOrderDto: ChangeFolderOrderDto,
+  ) {
+    return this.folderService.changeFolderOrder(folderId, changeFolderOrderDto);
   }
 }
