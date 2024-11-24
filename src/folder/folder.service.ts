@@ -243,4 +243,24 @@ export class FolderService {
       order,
     );
   }
+
+  async changeChecklistOrder(
+    currentFolderId: number,
+    folderId: number,
+    checklistId: number,
+    order: number,
+  ): Promise<void> {
+    const currentFolder = await this.findById(currentFolderId);
+    const originOrder = currentFolder.checklist_order.indexOf(checklistId);
+    const targetFolder =
+      currentFolderId === folderId
+        ? currentFolder
+        : await this.findById(folderId);
+
+    currentFolder.checklist_order.splice(originOrder, 1);
+    targetFolder.checklist_order.splice(order, 0, checklistId);
+
+    await this.folderRepository.save(currentFolder);
+    await this.folderRepository.save(targetFolder);
+  }
 }

@@ -91,9 +91,8 @@ export class WorkspaceService {
       throw new NotFoundException(`Workspace with ${workspaceId} not found`);
     }
     const originOrder = workspace.folder_order.indexOf(folderId);
-    workspace.folder_order.splice(order, 0, folderId);
     workspace.folder_order.splice(originOrder, 1);
-
+    workspace.folder_order.splice(order, 0, folderId);
     await this.workspaceRepository.save(workspace);
   }
 }

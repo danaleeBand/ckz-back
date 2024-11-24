@@ -10,6 +10,7 @@ import { Checklist } from './checklist.entity';
 import { FolderService } from '../folder/folder.service';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 import { Folder } from '../folder/folder.entity';
+import { ChangeChecklistOrderDto } from './dtos/change-checklist-order.dto';
 
 @Injectable()
 export class ChecklistService {
@@ -163,5 +164,24 @@ export class ChecklistService {
     );
 
     await manager.save(checklist);
+  }
+
+  async changeChecklistOrder(
+    checklistId: number,
+    dto: ChangeChecklistOrderDto,
+  ): Promise<void> {
+    const { folderId, order } = dto;
+    const checklist = await this.checklistRepository.findOne({
+      where: { id: checklistId },
+      relations: ['folder'],
+    });
+
+    const currentFolderId = checklist.folder.id;
+    await this.folderService.changeChecklistOrder(
+      currentFolderId,
+      folderId,
+      checklistId,
+      order,
+    );
   }
 }
