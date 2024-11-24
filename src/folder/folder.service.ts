@@ -90,36 +90,37 @@ export class FolderService {
   async createFolder(
     workspaceId: number,
     name: string,
-    isDefault?: boolean,
-    manager?: EntityManager,
+    isDefault: boolean,
+    manager: EntityManager,
   ): Promise<Folder> {
-    const executeInTransaction = async (transactionManager: EntityManager) => {
-      const workspace = await this.workspaceService.findById(
-        workspaceId,
-        transactionManager,
-      );
+    const workspace = await this.workspaceService.findById(
+      workspaceId,
+      manager,
+    );
 
-      const folder = new Folder();
-      folder.workspace = workspace;
-      folder.name = name;
-      folder.is_default = isDefault ?? false;
-      folder.permission_code = workspace.permission_code;
+    const folder = new Folder();
+    folder.workspace = workspace;
+    folder.name = name;
+    folder.is_default = isDefault;
+    folder.permission_code = workspace.permission_code;
+    await manager.save(folder);
 
-      await transactionManager.save(folder);
+    return folder;
+  }
+
+  async createFolderInWorkspace(
+    workspaceId: number,
+    name: string,
+  ): Promise<void> {
+    await this.dataSource.transaction(async (manager: EntityManager) => {
+      const folder = await this.createFolder(workspaceId, name, false, manager);
 
       await this.workspaceService.addFolderToWorkspaceOrder(
-        workspace.id,
+        workspaceId,
         folder.id,
-        transactionManager,
+        manager,
       );
-
-      return folder;
-    };
-
-    if (manager) {
-      return executeInTransaction(manager);
-    }
-    return this.dataSource.transaction(executeInTransaction);
+    });
   }
 
   async addChecklistToFolderOrder(

@@ -28,7 +28,7 @@ export class FolderController {
   })
   async createFolder(@Req() req, @Body() createFolderDto: CreateFolderDto) {
     const { workspaceId, name } = createFolderDto;
-    return this.folderService.createFolder(workspaceId, name);
+    return this.folderService.createFolderInWorkspace(workspaceId, name);
   }
 
   @Patch('/:folderId')
