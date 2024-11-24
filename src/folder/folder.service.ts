@@ -10,6 +10,7 @@ import { Folder } from './folder.entity';
 import { WorkspaceService } from '../workspace/services/workspace.service';
 import { UpdateFolderDto } from './dtos/update-folder.dto';
 import { ChecklistService } from '../checklist/checklist.service';
+import { ChangeFolderOrderDto } from './dtos/change-folder-order.dto';
 
 @Injectable()
 export class FolderService {
@@ -224,5 +225,22 @@ export class FolderService {
 
       await manager.remove(Folder, folder);
     });
+  }
+
+  async changeFolderOrder(
+    folderId: number,
+    dto: ChangeFolderOrderDto,
+  ): Promise<void> {
+    const { order } = dto;
+    const folder = await this.folderRepository.findOne({
+      where: { id: folderId },
+      relations: ['workspace'],
+    });
+
+    await this.workspaceService.changeFolderOrder(
+      folder.workspace.id,
+      folder.id,
+      order,
+    );
   }
 }
