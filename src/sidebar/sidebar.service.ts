@@ -7,6 +7,7 @@ import { GetWorkspaceDto } from './dtos/get-workspace.dto';
 import { GetDefaultFolderDto } from './dtos/get-default-folder.dto';
 import { GetFolderDto } from './dtos/get-folder.dto';
 import { GetChecklistDto } from './dtos/get-checklist.dto';
+import {Folder} from "../folder/folder.entity";
 
 @Injectable()
 export class SidebarService {
@@ -24,10 +25,10 @@ export class SidebarService {
     const userWorkspaces = await this.workspaceService.findByUserId(userId);
     const workspaces = await Promise.all(
       userWorkspaces.map(async (workspaceUser: WorkspaceUser) => {
-        const { id, name } = workspaceUser.workspace;
+        const { id, name, folder_order: folderOrder } = workspaceUser.workspace;
         const [defaultFolder, folders] = await Promise.all([
           this.findDefaultFolder(id),
-          this.findFolderList(id),
+          this.findFolderList(id, folderOrder),
         ]);
 
         return {
@@ -48,9 +49,9 @@ export class SidebarService {
       );
 
     const { id, checklist_order: checklistOrder, checklists } = defaultFolder;
-    const sortedChecklists = this.sortChecklistsByOrder(
+    const sortedChecklists = this.sortItemsByOrder(
       checklistOrder,
-      checklists,
+      new Map(checklists.map((checklist) => [checklist.id, checklist])),
     );
 
     return {
@@ -59,15 +60,20 @@ export class SidebarService {
     };
   }
 
-  async findFolderList(workspaceId: number): Promise<Array<GetFolderDto>> {
+  async findFolderList(
+    workspaceId: number,
+    folderOrder: number[],
+  ): Promise<Array<GetFolderDto>> {
     const folders =
       await this.folderService.findByWorkspaceIdWithChecklist(workspaceId);
+    const folderMap = new Map(folders.map((folder) => [folder.id, folder]));
+    const sortedFolders = this.sortItemsByOrder(folderOrder, folderMap);
 
-    const sortedFoldersChecklists = folders.map((folder) => {
+    const sortedFoldersChecklists = sortedFolders.map((folder) => {
       const { id, name, checklist_order: checklistOrder, checklists } = folder;
-      const sortedChecklists = this.sortChecklistsByOrder(
+      const sortedChecklists = this.sortItemsByOrder(
         checklistOrder,
-        checklists,
+        new Map(checklists.map((checklist) => [checklist.id, checklist])),
       );
 
       return {
@@ -76,19 +82,16 @@ export class SidebarService {
         checklists: sortedChecklists,
       };
     });
+
     return sortedFoldersChecklists;
   }
 
-  private sortChecklistsByOrder(
-    checklistOrder: Array<number>,
-    checklists: Array<GetChecklistDto>,
-  ): Array<GetChecklistDto> {
-    const checklistMap = new Map(
-      checklists.map((checklist) => [checklist.id, checklist]),
-    );
-
-    return checklistOrder
-      .map((checklistId) => checklistMap.get(checklistId))
-      .filter((checklist) => checklist !== undefined);
+  private sortItemsByOrder<T>(
+    order: Array<number>,
+    itemMap: Map<number, T>,
+  ): Array<T> {
+    return order
+      .map((itemId) => itemMap.get(itemId))
+      .filter((item) => item !== undefined);
   }
 }
