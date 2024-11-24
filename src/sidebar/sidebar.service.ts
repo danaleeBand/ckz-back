@@ -6,8 +6,6 @@ import { GetSidebarDto } from './dtos/get-sidebar.dto';
 import { GetWorkspaceDto } from './dtos/get-workspace.dto';
 import { GetDefaultFolderDto } from './dtos/get-default-folder.dto';
 import { GetFolderDto } from './dtos/get-folder.dto';
-import { GetChecklistDto } from './dtos/get-checklist.dto';
-import {Folder} from "../folder/folder.entity";
 
 @Injectable()
 export class SidebarService {
@@ -62,7 +60,7 @@ export class SidebarService {
 
   async findFolderList(
     workspaceId: number,
-    folderOrder: number[],
+    folderOrder: Array<number>,
   ): Promise<Array<GetFolderDto>> {
     const folders =
       await this.folderService.findByWorkspaceIdWithChecklist(workspaceId);
