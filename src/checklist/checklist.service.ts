@@ -129,14 +129,18 @@ export class ChecklistService {
   }
 
   async updateChecklist(
+    user: User,
     checklistId: number,
     updateChecklistDto: UpdateChecklistDto,
   ): Promise<Checklist> {
-    const { title } = updateChecklistDto;
     const checklist = await this.checklistRepository.findOne({
       where: { id: checklistId },
     });
-    checklist.title = title;
+
+    Object.assign(checklist, {
+      ...updateChecklistDto,
+      updated_by: { id: user.id },
+    });
 
     return this.checklistRepository.save(checklist);
   }
