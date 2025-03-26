@@ -18,28 +18,24 @@ export class Folder {
   name: string;
 
   @Column({ type: 'int', array: true, default: '{}' })
-  checklist_order: Array<number>;
+  checklistOrder: Array<number>;
 
   @Column({ type: 'boolean', default: false })
-  is_default: boolean;
+  isDefault: boolean;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => Workspace)
   @JoinColumn({ name: 'workspace_id' })
   workspace: Workspace;
 
   @Column({ type: 'varchar', nullable: false })
-  permission_code: string;
+  permissionCode: string;
 
   @OneToMany(() => Checklist, (checklist) => checklist.folder)
   checklists: Array<Checklist>;
-
-  isDefault(): boolean {
-    return this.is_default;
-  }
 }

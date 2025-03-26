@@ -18,28 +18,28 @@ export class Auth {
   id: number;
 
   @Column({ type: 'varchar', length: 25 })
-  provider_user_id: string;
+  providerUserId: string;
 
   @Column({ type: 'enum', enum: Provider })
   provider: Provider;
 
   @Column({ type: 'varchar', length: 255 })
-  access_token: string;
+  accessToken: string;
 
   @Column({ type: 'varchar', length: 255 })
-  refresh_token: string;
+  refreshToken: string;
 
   @Column({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp with time zone',
     default: () => 'CURRENT_TIMESTAMP',
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @OneToOne(() => User)
   @JoinColumn({ name: 'user_id' })

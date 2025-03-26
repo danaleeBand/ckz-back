@@ -23,7 +23,7 @@ export class SidebarService {
     const userWorkspaces = await this.workspaceService.findByUserId(userId);
     const workspaces = await Promise.all(
       userWorkspaces.map(async (workspaceUser: WorkspaceUser) => {
-        const { id, name, folder_order: folderOrder } = workspaceUser.workspace;
+        const { id, name, folderOrder } = workspaceUser.workspace;
         const [defaultFolder, folders] = await Promise.all([
           this.findDefaultFolder(id),
           this.findFolderList(id, folderOrder),
@@ -46,7 +46,7 @@ export class SidebarService {
         workspaceId,
       );
 
-    const { id, checklist_order: checklistOrder, checklists } = defaultFolder;
+    const { id, checklistOrder, checklists } = defaultFolder;
     const sortedChecklists = this.sortItemsByOrder(
       checklistOrder,
       new Map(checklists.map((checklist) => [checklist.id, checklist])),
@@ -68,7 +68,7 @@ export class SidebarService {
     const sortedFolders = this.sortItemsByOrder(folderOrder, folderMap);
 
     const sortedFoldersChecklists = sortedFolders.map((folder) => {
-      const { id, name, checklist_order: checklistOrder, checklists } = folder;
+      const { id, name, checklistOrder, checklists } = folder;
       const sortedChecklists = this.sortItemsByOrder(
         checklistOrder,
         new Map(checklists.map((checklist) => [checklist.id, checklist])),

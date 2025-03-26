@@ -42,11 +42,11 @@ export class FolderService {
     workspaceId: number,
   ): Promise<Folder> {
     return this.folderRepository.findOne({
-      where: { workspace: { id: workspaceId }, is_default: true },
+      where: { workspace: { id: workspaceId }, isDefault: true },
       relations: ['checklists'],
       select: {
         id: true,
-        checklist_order: true,
+        checklistOrder: true,
         checklists: {
           id: true,
           title: true,
@@ -59,12 +59,12 @@ export class FolderService {
     workspaceId: number,
   ): Promise<Array<Folder>> {
     return this.folderRepository.find({
-      where: { workspace: { id: workspaceId }, is_default: false },
+      where: { workspace: { id: workspaceId }, isDefault: false },
       relations: ['checklists'],
       select: {
         id: true,
         name: true,
-        checklist_order: true,
+        checklistOrder: true,
         checklists: {
           id: true,
           title: true,
@@ -79,12 +79,12 @@ export class FolderService {
   ): Promise<Folder> {
     if (manager) {
       return manager.findOne(Folder, {
-        where: { workspace: { id: workspaceId }, is_default: true },
+        where: { workspace: { id: workspaceId }, isDefault: true },
       });
     }
 
     return this.folderRepository.findOne({
-      where: { workspace: { id: workspaceId }, is_default: true },
+      where: { workspace: { id: workspaceId }, isDefault: true },
     });
   }
 
@@ -99,11 +99,12 @@ export class FolderService {
       manager,
     );
 
-    const folder = new Folder();
-    folder.workspace = workspace;
-    folder.name = name;
-    folder.is_default = isDefault;
-    folder.permission_code = workspace.permission_code;
+    const folder = await this.folderRepository.create({
+      workspace,
+      name,
+      isDefault,
+      permissionCode: workspace.permissionCode,
+    });
     await manager.save(folder);
 
     return folder;
@@ -133,8 +134,8 @@ export class FolderService {
       where: { id: folderId },
     });
 
-    if (!folder.checklist_order.includes(checklistId)) {
-      folder.checklist_order.push(checklistId);
+    if (!folder.checklistOrder.includes(checklistId)) {
+      folder.checklistOrder.push(checklistId);
       await manager.save(folder);
     }
   }
@@ -149,11 +150,11 @@ export class FolderService {
     });
 
     const newChecklistIds = checklistIds.filter(
-      (checklistId) => !folder.checklist_order.includes(checklistId),
+      (checklistId) => !folder.checklistOrder.includes(checklistId),
     );
 
     if (newChecklistIds.length > 0) {
-      folder.checklist_order.push(...newChecklistIds);
+      folder.checklistOrder.push(...newChecklistIds);
       await manager.save(folder);
     }
   }
@@ -171,7 +172,7 @@ export class FolderService {
       throw new NotFoundException(`Folder with ID ${folderId} not found`);
     }
 
-    folder.checklist_order = folder.checklist_order.filter(
+    folder.checklistOrder = folder.checklistOrder.filter(
       (id) => id !== checklistId,
     );
 
@@ -212,14 +213,14 @@ export class FolderService {
         );
 
         await this.checklistService.updateChecklistsFolderId(
-          folder.checklist_order,
+          folder.checklistOrder,
           defaultFolder,
           manager,
         );
 
         await this.addChecklistsToFolderOrder(
           defaultFolder.id,
-          folder.checklist_order,
+          folder.checklistOrder,
           manager,
         );
       }
@@ -252,14 +253,14 @@ export class FolderService {
     order: number,
   ): Promise<void> {
     const currentFolder = await this.findById(currentFolderId);
-    const originOrder = currentFolder.checklist_order.indexOf(checklistId);
+    const originOrder = currentFolder.checklistOrder.indexOf(checklistId);
     const targetFolder =
       currentFolderId === folderId
         ? currentFolder
         : await this.findById(folderId);
 
-    currentFolder.checklist_order.splice(originOrder, 1);
-    targetFolder.checklist_order.splice(order, 0, checklistId);
+    currentFolder.checklistOrder.splice(originOrder, 1);
+    targetFolder.checklistOrder.splice(order, 0, checklistId);
 
     await this.folderRepository.save(currentFolder);
     await this.folderRepository.save(targetFolder);

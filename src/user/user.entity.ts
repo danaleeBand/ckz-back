@@ -11,26 +11,26 @@ export class User {
   name: string;
 
   @Column({ nullable: true })
-  profile_image_url: string;
+  profileImageUrl: string;
 
   @Column({ default: false })
-  is_checky: boolean;
+  isChecky: boolean;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 
-  @OneToMany(() => Checklist, (checklist) => checklist.created_by)
-  created_checklists: Array<Checklist>;
+  @OneToMany(() => Checklist, (checklist) => checklist.createdBy)
+  createdChecklists: Array<Checklist>;
 
-  @OneToMany(() => Checklist, (checklist) => checklist.updated_by)
-  updated_checklists: Array<Checklist>;
+  @OneToMany(() => Checklist, (checklist) => checklist.updatedBy)
+  updatedChecklists: Array<Checklist>;
 
-  @OneToMany(() => ChecklistItem, (checklist_item) => checklist_item.created_by)
-  created_checklist_items: Array<Checklist>;
+  @OneToMany(() => ChecklistItem, (checklistItem) => checklistItem.createdBy)
+  createdChecklistItems: Array<Checklist>;
 
-  @OneToMany(() => ChecklistItem, (checklist_item) => checklist_item.updated_by)
-  updated_checklist_items: Array<Checklist>;
+  @OneToMany(() => ChecklistItem, (checklistItem) => checklistItem.updatedBy)
+  updated_checklistItems: Array<Checklist>;
 }

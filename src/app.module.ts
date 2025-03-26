@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -31,6 +32,7 @@ dotenv.config();
       migrationsRun: false,
       migrations: [`${__dirname}/../migrations/*.ts`],
       migrationsTableName: 'migrations',
+      namingStrategy: new SnakeNamingStrategy(),
     }),
     AuthModule,
     UserModule,

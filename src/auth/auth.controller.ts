@@ -145,10 +145,7 @@ export class AuthController {
     },
   })
   @HttpCode(HttpStatus.OK)
-  async refreshAccessToken(
-    @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
-  ) {
+  async refreshAccessToken(@Req() req: Request) {
     const { refreshToken } = req.cookies;
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token이 없습니다.');

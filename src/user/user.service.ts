@@ -51,13 +51,13 @@ export class UserService {
       throw new Error('User not found');
     }
 
-    if (!user.is_checky) {
+    if (!user.isChecky) {
       await this.createSampleData(user);
     }
 
     user.name = userName;
-    user.profile_image_url = profileImageUrl;
-    user.is_checky = true;
+    user.profileImageUrl = profileImageUrl;
+    user.isChecky = true;
     await this.userRepository.save(user);
   }
 
