@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, EntityManager, Repository } from 'typeorm';
 import { ChecklistItem } from './checklist-item.entity';
@@ -10,6 +15,7 @@ export class ChecklistItemService {
   constructor(
     @InjectRepository(ChecklistItem)
     private readonly checklistItemRepository: Repository<ChecklistItem>,
+    @Inject(forwardRef(() => ChecklistService))
     private readonly checklistService: ChecklistService,
     private dataSource: DataSource,
   ) {}

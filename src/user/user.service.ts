@@ -82,8 +82,10 @@ export class UserService {
         manager,
       );
       const checklist = await this.checklistService.createChecklist(
+        user,
         folder.id,
         '기본 체크리스트',
+        '',
         manager,
       );
       const checklistItemList = [

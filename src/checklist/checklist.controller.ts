@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Patch,
   Post,
@@ -22,6 +23,15 @@ import { ChangeChecklistOrderDto } from './dtos/change-checklist-order.dto';
 export class ChecklistController {
   constructor(private readonly checklistService: ChecklistService) {}
 
+  @Get('/:checklistId')
+  @ApiOperation({
+    summary: '체크리스트 상세 조회',
+    description: '체크리스트 상세 조회',
+  })
+  async getChecklist(@Param('checklistId') checklistId: number) {
+    return this.checklistService.getChecklistDetail(checklistId);
+  }
+
   @Post()
   @ApiOperation({
     summary: '체크리스트 생성',
@@ -31,8 +41,9 @@ export class ChecklistController {
     @Req() req,
     @Body() createChecklistDto: CreateChecklistDto,
   ) {
-    const { folderId, title } = createChecklistDto;
-    return this.checklistService.createChecklist(folderId, title);
+    const { user } = req;
+    const { folderId, title, emoji } = createChecklistDto;
+    return this.checklistService.createChecklist(user, folderId, title, emoji);
   }
 
   @Patch('/:checklistId')

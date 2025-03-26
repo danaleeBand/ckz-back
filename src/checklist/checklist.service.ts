@@ -11,6 +11,8 @@ import { FolderService } from '../folder/folder.service';
 import { UpdateChecklistDto } from './dtos/update-checklist.dto';
 import { Folder } from '../folder/folder.entity';
 import { ChangeChecklistOrderDto } from './dtos/change-checklist-order.dto';
+import { ChecklistItemService } from '../checklist-item/checklist-item.service';
+import { User } from '../user/user.entity';
 
 @Injectable()
 export class ChecklistService {
@@ -20,17 +22,43 @@ export class ChecklistService {
     @Inject(forwardRef(() => FolderService))
     private readonly folderService: FolderService,
     private dataSource: DataSource,
+    @Inject(forwardRef(() => ChecklistItemService))
+    private readonly checklistItemService: ChecklistItemService,
   ) {}
 
-  async findByFolderId(folderId: number) {
-    return this.checklistRepository.find({
-      where: { folder: { id: folderId } },
+  async getChecklist(checklistId: number): Promise<Checklist> {
+    return this.checklistRepository.findOne({
+      where: { id: checklistId },
+      relations: {
+        folder: {
+          workspace: true,
+        },
+        created_by: true,
+        updated_by: true,
+      },
     });
   }
 
+  async getChecklistDetail(checklistId: number) {
+    const checklist = await this.getChecklist(checklistId);
+    const checklistItmes =
+      await this.checklistItemService.getChecklistItems(checklistId);
+    const { folder, ...checklistData } = checklist;
+    const { workspace, ...folderData } = folder;
+
+    return {
+      checklist: checklistData,
+      folder: folderData,
+      workspace,
+      items: checklistItmes,
+    };
+  }
+
   async createChecklist(
+    user: User,
     folderId: number,
     title: string,
+    emoji: string,
     manager?: EntityManager,
   ): Promise<Checklist> {
     const executeInTransaction = async (transactionManager: EntityManager) => {
@@ -39,10 +67,14 @@ export class ChecklistService {
         transactionManager,
       );
 
-      const checklist = new Checklist();
-      checklist.title = title;
-      checklist.folder = folder;
-      checklist.permission_code = folder.permission_code;
+      const checklist = await this.checklistRepository.create({
+        title,
+        emoji,
+        folder,
+        permission_code: folder.permission_code,
+        created_by: { id: user.id },
+        updated_by: { id: user.id },
+      });
 
       await transactionManager.save(checklist);
 

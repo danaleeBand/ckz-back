@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateChecklistDto {
@@ -11,4 +11,9 @@ export class CreateChecklistDto {
   @IsNotEmpty()
   @IsString()
   title: string;
+
+  @ApiProperty({ type: String, description: '체크리스트 이모지' })
+  @IsOptional()
+  @IsString()
+  emoji: string;
 }

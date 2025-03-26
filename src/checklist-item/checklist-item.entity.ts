@@ -39,6 +39,6 @@ export class ChecklistItem {
   @JoinColumn({ name: 'checklist_id' })
   checklist: Checklist;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, select: false })
   permission_code: string;
 }
