@@ -58,11 +58,15 @@ export class ChecklistItemController {
     description: '체크리스트 항목을 수정합니다. - title 필수',
   })
   async updateChecklistItem(
+    @Req() req,
     @Param('checklistId') checklistId: number,
     @Param('checklistItemId') checklistItemId: number,
     @Body() updateChecklistItemDto: UpdateChecklistItemDto,
   ) {
+    const { user } = req;
+
     return this.checklistItemService.updateChecklistItem(
+      user,
       checklistItemId,
       updateChecklistItemDto,
     );

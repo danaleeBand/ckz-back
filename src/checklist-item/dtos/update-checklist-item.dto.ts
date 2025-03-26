@@ -12,6 +12,11 @@ export class UpdateChecklistItemDto {
   @IsString()
   memo: string;
 
+  @ApiProperty({ type: String, description: '체크리스트 항목 이모지' })
+  @IsOptional()
+  @IsString()
+  emoji: string;
+
   @ApiProperty({ type: String, description: '체크리스트 항목 이미지 URL' })
   @IsOptional()
   @IsString()

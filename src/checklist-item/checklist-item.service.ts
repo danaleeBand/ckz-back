@@ -90,6 +90,7 @@ export class ChecklistItemService {
   }
 
   async updateChecklistItem(
+    user: User,
     checklistItemId: number,
     updateChecklistItemDto: UpdateChecklistItemDto,
   ): Promise<ChecklistItem> {
@@ -97,7 +98,10 @@ export class ChecklistItemService {
       where: { id: checklistItemId },
     });
 
-    Object.assign(checklistItem, updateChecklistItemDto);
+    Object.assign(checklistItem, {
+      ...updateChecklistItemDto,
+      updated_by: { id: user.id },
+    });
 
     return this.checklistItemRepository.save(checklistItem);
   }
