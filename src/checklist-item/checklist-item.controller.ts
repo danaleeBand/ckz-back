@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -36,11 +37,19 @@ export class ChecklistItemController {
     description: '체크리스트 항목을 생성합니다.',
   })
   async createChecklistItem(
+    @Req() req,
     @Param('checklistId') checklistId: number,
     @Body() createChecklistItemDto: CreateChecklistItemDto,
   ) {
-    const { title } = createChecklistItemDto;
-    return this.checklistItemService.createChecklistItem(checklistId, title);
+    const { title, memo, emoji } = createChecklistItemDto;
+    const { user } = req;
+    return this.checklistItemService.createChecklistItem(
+      user,
+      checklistId,
+      title,
+      memo,
+      emoji,
+    );
   }
 
   @Patch('/:checklistItemId')

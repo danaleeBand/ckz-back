@@ -3,7 +3,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateChecklistItemDto {
   @ApiProperty({ type: String, description: '체크리스트 항목 제목' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   title: string;
 

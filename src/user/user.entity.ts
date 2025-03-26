@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Checklist } from '../checklist/checklist.entity';
+import { ChecklistItem } from '../checklist-item/checklist-item.entity';
 
 @Entity()
 export class User {
@@ -26,4 +27,10 @@ export class User {
 
   @OneToMany(() => Checklist, (checklist) => checklist.updated_by)
   updated_checklists: Array<Checklist>;
+
+  @OneToMany(() => ChecklistItem, (checklist_item) => checklist_item.created_by)
+  created_checklist_items: Array<Checklist>;
+
+  @OneToMany(() => ChecklistItem, (checklist_item) => checklist_item.updated_by)
+  updated_checklist_items: Array<Checklist>;
 }
