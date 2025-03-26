@@ -24,11 +24,20 @@ export class ChecklistItemController {
 
   @Get('')
   @ApiOperation({
-    summary: '체크리스트 항목 조회',
-    description: '체크리스트 항목을 조회합니다.',
+    summary: '체크리스트 항목 전체 조회',
+    description: '체크리스트 항목을 전체 조회합니다.',
   })
   async getChecklistItems(@Param('checklistId') checklistId: number) {
     return this.checklistItemService.getChecklistItems(checklistId);
+  }
+
+  @Get('/:checklistItemId')
+  @ApiOperation({
+    summary: '체크리스트 항목 상세 조회',
+    description: '체크리스트 항목을 상세 조회합니다.',
+  })
+  async getChecklistItem(@Param('checklistItemId') checklistItemId: number) {
+    return this.checklistItemService.getChecklistItemById(checklistItemId);
   }
 
   @Post('')

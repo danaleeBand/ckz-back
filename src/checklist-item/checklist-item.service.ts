@@ -71,22 +71,22 @@ export class ChecklistItemService {
     const checklistItems = await this.checklistItemRepository
       .createQueryBuilder('item')
       .where('item.id IN (:...ids)', { ids: itemOrder })
-      .select([
-        'item.id',
-        'item.title',
-        'item.memo',
-        'item.image_url',
-        'item.is_checked',
-        'item.checked_at',
-        'item.created_at',
-        'item.updated_at',
-      ])
       .orderBy(
         `array_position(array[${itemOrder.join(', ')}]::int[], item.id::int)`,
       )
       .getMany();
 
     return checklistItems;
+  }
+
+  async getChecklistItemById(id: number): Promise<ChecklistItem> {
+    return this.checklistItemRepository.findOne({
+      where: { id },
+      relations: {
+        created_by: true,
+        updated_by: true,
+      },
+    });
   }
 
   async updateChecklistItem(
