@@ -3,7 +3,7 @@ import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class UpdateChecklistItemDto {
   @ApiProperty({ type: String, description: '체크리스트 항목 제목' })
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   title: string;
 
@@ -11,6 +11,11 @@ export class UpdateChecklistItemDto {
   @IsOptional()
   @IsString()
   memo: string;
+
+  @ApiProperty({ type: String, description: '체크리스트 항목 이모지' })
+  @IsOptional()
+  @IsString()
+  emoji: string;
 
   @ApiProperty({ type: String, description: '체크리스트 항목 이미지 URL' })
   @IsOptional()

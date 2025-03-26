@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -23,11 +24,20 @@ export class ChecklistItemController {
 
   @Get('')
   @ApiOperation({
-    summary: '체크리스트 항목 조회',
-    description: '체크리스트 항목을 조회합니다.',
+    summary: '체크리스트 항목 전체 조회',
+    description: '체크리스트 항목을 전체 조회합니다.',
   })
   async getChecklistItems(@Param('checklistId') checklistId: number) {
     return this.checklistItemService.getChecklistItems(checklistId);
+  }
+
+  @Get('/:checklistItemId')
+  @ApiOperation({
+    summary: '체크리스트 항목 상세 조회',
+    description: '체크리스트 항목을 상세 조회합니다.',
+  })
+  async getChecklistItem(@Param('checklistItemId') checklistItemId: number) {
+    return this.checklistItemService.getChecklistItemById(checklistItemId);
   }
 
   @Post('')
@@ -36,11 +46,19 @@ export class ChecklistItemController {
     description: '체크리스트 항목을 생성합니다.',
   })
   async createChecklistItem(
+    @Req() req,
     @Param('checklistId') checklistId: number,
     @Body() createChecklistItemDto: CreateChecklistItemDto,
   ) {
-    const { title } = createChecklistItemDto;
-    return this.checklistItemService.createChecklistItem(checklistId, title);
+    const { title, memo, emoji } = createChecklistItemDto;
+    const { user } = req;
+    return this.checklistItemService.createChecklistItem(
+      user,
+      checklistId,
+      title,
+      memo,
+      emoji,
+    );
   }
 
   @Patch('/:checklistItemId')
@@ -49,11 +67,15 @@ export class ChecklistItemController {
     description: '체크리스트 항목을 수정합니다. - title 필수',
   })
   async updateChecklistItem(
+    @Req() req,
     @Param('checklistId') checklistId: number,
     @Param('checklistItemId') checklistItemId: number,
     @Body() updateChecklistItemDto: UpdateChecklistItemDto,
   ) {
+    const { user } = req;
+
     return this.checklistItemService.updateChecklistItem(
+      user,
       checklistItemId,
       updateChecklistItemDto,
     );

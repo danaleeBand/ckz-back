@@ -56,7 +56,10 @@ export class ChecklistController {
     @Param('checklistId') checklistId: number,
     @Body() updateChecklistDto: UpdateChecklistDto,
   ) {
+    const { user } = req;
+
     return this.checklistService.updateChecklist(
+      user,
       checklistId,
       updateChecklistDto,
     );

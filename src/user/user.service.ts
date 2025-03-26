@@ -89,15 +89,24 @@ export class UserService {
         manager,
       );
       const checklistItemList = [
-        '체키가 되기',
-        '친구들과 워크스페이스 생성하기',
-        '체크리스트 작성하기',
+        { title: '체키가 되기 🎉', memo: '체키가 되어보자!' },
+        {
+          title: '친구들과 워크스페이스 생성하기 ✅',
+          memo: '함께할 친구들과 멋진 공간을 만들어보자!',
+        },
+        {
+          title: '체크리스트 작성하기 👯',
+          memo: '해야 할 일들을 정리하고, 하나씩 달성해보자!',
+        },
       ];
       const checklistItemOrder = [];
-      const promises = checklistItemList.map(async (title) => {
+      const promises = checklistItemList.map(async ({ title, memo }) => {
         const checklistItem = this.checklistItemService.createChecklistItem(
+          user,
           checklist.id,
           title,
+          memo,
+          '',
           manager,
         );
         checklistItemOrder.push((await checklistItem).id);
