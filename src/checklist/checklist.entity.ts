@@ -22,24 +22,24 @@ export class Checklist {
   emoji: string;
 
   @Column({ type: 'int', array: true, default: '{}' })
-  item_order: Array<number>;
+  itemOrder: Array<number>;
 
-  @ManyToOne(() => User, (user) => user.created_checklists)
+  @ManyToOne(() => User, (user) => user.createdChecklists)
   @JoinColumn({ name: 'created_by' })
-  created_by: User;
+  createdBy: User;
 
-  @ManyToOne(() => User, (user) => user.updated_checklists)
+  @ManyToOne(() => User, (user) => user.updatedChecklists)
   @JoinColumn({ name: 'updated_by' })
-  updated_by: User;
+  updatedBy: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ type: 'varchar', nullable: false })
-  permission_code: string;
+  permissionCode: string;
 
   @ManyToOne(() => Folder)
   @JoinColumn({ name: 'folder_id' })

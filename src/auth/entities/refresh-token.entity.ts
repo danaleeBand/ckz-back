@@ -17,14 +17,14 @@ export class RefreshToken {
   user: User;
 
   @Column()
-  refresh_token: string;
+  refreshToken: string;
 
   @Column({ type: 'timestamp' })
-  expires_at: Date;
+  expiresAt: Date;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 }

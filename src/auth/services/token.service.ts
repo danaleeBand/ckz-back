@@ -61,7 +61,7 @@ export class TokenService {
       decodedToken.id,
       refreshToken,
     );
-    if (!userRefreshToken || userRefreshToken.expires_at < new Date()) {
+    if (!userRefreshToken || userRefreshToken.expiresAt < new Date()) {
       throw new UnauthorizedException('Refresh token is expired.');
     }
 
@@ -74,7 +74,7 @@ export class TokenService {
     refreshToken: string,
   ): Promise<RefreshToken> {
     const userRefreshToken = await this.refreshTokenRepository.findOne({
-      where: { user: { id: userId }, refresh_token: refreshToken },
+      where: { user: { id: userId }, refreshToken },
     });
     return userRefreshToken;
   }
@@ -86,10 +86,11 @@ export class TokenService {
   ) {
     const user = await this.userService.findOneUser(userId);
 
-    const token = new RefreshToken();
-    token.user = user;
-    token.refresh_token = refreshToken;
-    token.expires_at = expiresAt;
+    const token = await this.refreshTokenRepository.create({
+      user,
+      refreshToken,
+      expiresAt,
+    });
 
     return this.refreshTokenRepository.save(token);
   }

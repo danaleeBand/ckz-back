@@ -33,8 +33,8 @@ export class ChecklistService {
         folder: {
           workspace: true,
         },
-        created_by: true,
-        updated_by: true,
+        createdBy: true,
+        updatedBy: true,
       },
     });
   }
@@ -71,9 +71,9 @@ export class ChecklistService {
         title,
         emoji,
         folder,
-        permission_code: folder.permission_code,
-        created_by: { id: user.id },
-        updated_by: { id: user.id },
+        permissionCode: folder.permissionCode,
+        createdBy: { id: user.id },
+        updatedBy: { id: user.id },
       });
 
       await transactionManager.save(checklist);
@@ -102,7 +102,7 @@ export class ChecklistService {
       where: { id: checklistId },
     });
 
-    checklist.item_order.push(checklistItemId);
+    checklist.itemOrder.push(checklistItemId);
 
     await manager.save(checklist);
   }
@@ -116,7 +116,7 @@ export class ChecklistService {
       where: { id: checklistId },
     });
 
-    checklist.item_order = checklistItemIds;
+    checklist.itemOrder = checklistItemIds;
     await manager.save(checklist);
   }
 
@@ -195,7 +195,7 @@ export class ChecklistService {
       throw new NotFoundException(`Checklist with ID ${checklistId} not found`);
     }
 
-    checklist.item_order = checklist.item_order.filter(
+    checklist.itemOrder = checklist.itemOrder.filter(
       (id) => id !== checklistItemId,
     );
 

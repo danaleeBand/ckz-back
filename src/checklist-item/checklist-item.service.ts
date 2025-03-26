@@ -39,9 +39,9 @@ export class ChecklistItemService {
         title,
         memo,
         emoji,
-        permission_code: checklist.permission_code,
-        created_by: { id: user.id },
-        updated_by: { id: user.id },
+        permissionCode: checklist.permissionCode,
+        createdBy: { id: user.id },
+        updatedBy: { id: user.id },
       });
 
       await transactionManager.save(checklistItem);
@@ -61,7 +61,7 @@ export class ChecklistItemService {
   }
 
   async getChecklistItems(checklistId: number) {
-    const { item_order: itemOrder } =
+    const { itemOrder } =
       await this.checklistService.findByChecklistId(checklistId);
 
     if (itemOrder.length === 0) {
@@ -83,8 +83,8 @@ export class ChecklistItemService {
     return this.checklistItemRepository.findOne({
       where: { id },
       relations: {
-        created_by: true,
-        updated_by: true,
+        createdBy: true,
+        updatedBy: true,
       },
     });
   }

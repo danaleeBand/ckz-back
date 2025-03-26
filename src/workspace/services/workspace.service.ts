@@ -20,7 +20,7 @@ export class WorkspaceService {
   ) {
     const workspace = new Workspace();
     workspace.name = name;
-    workspace.permission_code = permissionCode;
+    workspace.permissionCode = permissionCode;
     if (manager) {
       return manager.save(workspace);
     }
@@ -53,8 +53,8 @@ export class WorkspaceService {
     const workspace = await manager.findOne(Workspace, {
       where: { id: workspaceId },
     });
-    if (!workspace.folder_order.includes(folderId)) {
-      workspace.folder_order.push(folderId);
+    if (!workspace.folderOrder.includes(folderId)) {
+      workspace.folderOrder.push(folderId);
       await manager.save(workspace);
     }
   }
@@ -72,7 +72,7 @@ export class WorkspaceService {
       throw new NotFoundException(`Workspace with ${workspaceId} not found`);
     }
 
-    workspace.folder_order = workspace.folder_order.filter(
+    workspace.folderOrder = workspace.folderOrder.filter(
       (id) => id !== folderId,
     );
 
@@ -90,9 +90,9 @@ export class WorkspaceService {
     if (!workspace) {
       throw new NotFoundException(`Workspace with ${workspaceId} not found`);
     }
-    const originOrder = workspace.folder_order.indexOf(folderId);
-    workspace.folder_order.splice(originOrder, 1);
-    workspace.folder_order.splice(order, 0, folderId);
+    const originOrder = workspace.folderOrder.indexOf(folderId);
+    workspace.folderOrder.splice(originOrder, 1);
+    workspace.folderOrder.splice(order, 0, folderId);
     await this.workspaceRepository.save(workspace);
   }
 }

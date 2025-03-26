@@ -23,34 +23,34 @@ export class ChecklistItem {
   emoji: string;
 
   @Column({ nullable: true })
-  image_url: string;
+  imageUrl: string;
 
   @Column({ default: false })
-  is_checked: boolean;
+  isChecked: boolean;
 
-  @ManyToOne(() => User, (user) => user.created_checklist_items)
+  @ManyToOne(() => User, (user) => user.createdChecklistItems)
   @JoinColumn({ name: 'created_by' })
-  created_by: User;
+  createdBy: User;
 
-  @ManyToOne(() => User, (user) => user.updated_checklist_items)
+  @ManyToOne(() => User, (user) => user.updated_checklistItems)
   @JoinColumn({ name: 'updated_by' })
-  updated_by: User;
+  updatedBy: User;
 
   @Column({ type: 'timestamp', nullable: true })
-  checked_at: Date;
+  checkedAt: Date;
+
+  @Column({ type: 'varchar', nullable: false, select: false })
+  permissionCode: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => Checklist, (checklist) => checklist.items, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'checklist_id' })
   checklist: Checklist;
-
-  @Column({ type: 'varchar', nullable: false, select: false })
-  permission_code: string;
 }

@@ -10,7 +10,7 @@ import { TokenService } from './token.service';
 export class AuthService {
   constructor(
     @InjectRepository(Auth)
-    private AuthRepository: Repository<Auth>,
+    private authRepository: Repository<Auth>,
     private userService: UserService,
     private readonly tokenService: TokenService,
     private dataSource: DataSource,
@@ -81,8 +81,8 @@ export class AuthService {
   }
 
   async findOneAuth(provider, providerUserId: string): Promise<Auth> {
-    return this.AuthRepository.findOne({
-      where: { provider, provider_user_id: providerUserId },
+    return this.authRepository.findOne({
+      where: { provider, providerUserId },
       relations: ['user'],
     });
   }
@@ -95,16 +95,17 @@ export class AuthService {
     refreshToken: string,
     manager?: EntityManager,
   ): Promise<Auth> {
-    const auth = new Auth();
-    auth.user = user;
-    auth.provider = provider;
-    auth.provider_user_id = providerUserId;
-    auth.access_token = accessToken;
-    auth.refresh_token = refreshToken;
+    const auth = await this.authRepository.create({
+      user,
+      provider,
+      providerUserId,
+      accessToken,
+      refreshToken,
+    });
     if (manager) {
       return manager.save(auth);
     }
-    return this.AuthRepository.save(auth);
+    return this.authRepository.save(auth);
   }
 
   async updateAuth(
@@ -114,8 +115,8 @@ export class AuthService {
     refreshToken: string,
   ): Promise<void> {
     const auth = await this.findOneAuth(provider, providerUserId);
-    auth.access_token = accessToken;
-    auth.refresh_token = refreshToken;
-    await this.AuthRepository.save(auth);
+    auth.accessToken = accessToken;
+    auth.refreshToken = refreshToken;
+    await this.authRepository.save(auth);
   }
 }

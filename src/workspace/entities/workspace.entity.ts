@@ -9,14 +9,14 @@ export class Workspace {
   name: string;
 
   @Column('int', { array: true, default: () => "'{}'" })
-  folder_order: Array<number>;
+  folderOrder: Array<number>;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ type: 'varchar', nullable: false })
-  permission_code: string;
+  permissionCode: string;
 }
