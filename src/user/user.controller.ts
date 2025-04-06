@@ -9,6 +9,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { GetUserDto } from './dtos/get-user.dto';
 
 @Controller('/users')
 @ApiTags('사용자')
@@ -22,16 +23,7 @@ export class UserController {
     summary: '내 정보 조회',
     description: '내 정보 조회',
   })
-  @ApiOkResponse({
-    description: '성공적으로 사용자 정보를 가져옴',
-    schema: {
-      example: {
-        name: '체키',
-        profile_image_url: '프로필 이미지 url',
-        is_checky: true,
-      },
-    },
-  })
+  @ApiOkResponse({ description: '성공', type: GetUserDto })
   async getUser(@Req() req) {
     const userId = req.user.id;
     const user = this.userService.findOneUser(userId);

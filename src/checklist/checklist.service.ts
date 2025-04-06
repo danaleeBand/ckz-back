@@ -41,7 +41,7 @@ export class ChecklistService {
 
   async getChecklistDetail(checklistId: number) {
     const checklist = await this.getChecklist(checklistId);
-    const checklistItmes =
+    const checklistItems =
       await this.checklistItemService.getChecklistItems(checklistId);
     const { folder, ...checklistData } = checklist;
     const { workspace, ...folderData } = folder;
@@ -50,7 +50,7 @@ export class ChecklistService {
       checklist: checklistData,
       folder: folderData,
       workspace,
-      items: checklistItmes,
+      items: checklistItems,
     };
   }
 
