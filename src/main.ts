@@ -53,6 +53,7 @@ async function bootstrap() {
     allowedHeaders: 'Content-Type, Accept, Authorization, Cookie',
   });
 
-  await app.listen(process.env.PORT || 8000);
+  const port = process.env.PORT || 8000;
+  await app.listen(port, '0.0.0.0');
 }
 bootstrap();
