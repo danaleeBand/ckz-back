@@ -1,25 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityManager, Repository } from 'typeorm';
 import { Permission } from './permission.entity';
 import { User } from '../user/user.entity';
+import { PermissionRepository } from './permission.repository';
 
 @Injectable()
 export class PermissionService {
-  constructor(
-    @InjectRepository(Permission)
-    private permissionRepository: Repository<Permission>,
-  ) {}
+  constructor(private permissionRepository: PermissionRepository) {}
 
-  async createPermission(user: User, code?: string) {
-    const permission = new Permission();
-    permission.user = user;
-    let permissionCode = code;
-    if (!permissionCode) {
-      permissionCode = crypto.randomUUID();
-    }
-    permission.code = permissionCode;
-    await this.permissionRepository.save(permission);
+  async createPermission(userId: number, manager: EntityManager) {
+    const permissionCode = crypto.randomUUID();
+
+    const permission = await this.permissionRepository.createPermission(
+      userId,
+      permissionCode,
+      manager,
+    );
 
     return permission.code;
   }

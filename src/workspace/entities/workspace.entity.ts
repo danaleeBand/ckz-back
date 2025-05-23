@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { WorkspaceUser } from './workspace-user.entity';
 
 @Entity()
 export class Workspace {
@@ -19,4 +20,7 @@ export class Workspace {
 
   @Column({ type: 'varchar', nullable: false })
   permissionCode: string;
+
+  @OneToMany(() => WorkspaceUser, (workspaceUser) => workspaceUser.workspace)
+  workspaceUsers: Array<WorkspaceUser>;
 }
