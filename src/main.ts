@@ -9,11 +9,7 @@ import * as cookieParser from 'cookie-parser';
 import * as fs from 'fs';
 import { AppModule } from './app.module';
 
-const envFilePath = `.env.${process.env.NODE_ENV || 'development'}`;
 dotenv.config({ path: '.env' });
-if (fs.existsSync(envFilePath)) {
-  dotenv.config({ path: envFilePath });
-}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
