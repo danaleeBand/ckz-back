@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GetWorkspaceDto {
+export class WorkspaceDto {
   @ApiProperty({ type: Number, example: 1 })
   id: number;
 

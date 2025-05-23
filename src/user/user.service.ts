@@ -62,17 +62,20 @@ export class UserService {
   }
 
   async createSampleData(user: User) {
-    const permissionCode = await this.permissionService.createPermission(user);
-
     await this.dataSource.transaction(async (manager: EntityManager) => {
+      const permissionCode = await this.permissionService.createPermission(
+        user.id,
+        manager,
+      );
+
       const workspace = await this.workspaceService.createWorkspace(
         '기본 워크스페이스',
         permissionCode,
         manager,
       );
-      const workspaceUser = await this.workspaceUserService.createWorkspaceUser(
-        user,
-        workspace,
+      await this.workspaceUserService.createWorkspaceUser(
+        workspace.id,
+        user.id,
         manager,
       );
       const folder = await this.folderService.createFolder(

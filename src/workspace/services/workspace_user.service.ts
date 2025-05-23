@@ -4,25 +4,21 @@ import { EntityManager, Repository } from 'typeorm';
 import { WorkspaceUser } from '../entities/workspace-user.entity';
 import { User } from '../../user/user.entity';
 import { Workspace } from '../entities/workspace.entity';
+import { WorkspaceUserRepository } from '../repositories/workspace-user.repository';
 
 @Injectable()
 export class WorkspaceUserService {
-  constructor(
-    @InjectRepository(WorkspaceUser)
-    private workspaceUserRepository: Repository<WorkspaceUser>,
-  ) {}
+  constructor(private workspaceUserRepository: WorkspaceUserRepository) {}
 
   async createWorkspaceUser(
-    user: User,
-    workspace: Workspace,
-    manager?: EntityManager,
-  ) {
-    const workspaceUser = new WorkspaceUser();
-    workspaceUser.user = user;
-    workspaceUser.workspace = workspace;
-    if (manager) {
-      return manager.save(workspaceUser);
-    }
-    return this.workspaceUserRepository.save(workspaceUser);
+    workspaceId: number,
+    userId: number,
+    manager: EntityManager,
+  ): Promise<void> {
+    await this.workspaceUserRepository.createWorkspaceUser(
+      workspaceId,
+      userId,
+      manager,
+    );
   }
 }
