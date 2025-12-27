@@ -1625,6 +1625,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/multer@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@types/multer@npm:2.0.0"
+  dependencies:
+    "@types/express": "npm:*"
+  checksum: 10c0/375b0e77c4675c2ff27d1170e469df48dced928cc9fcd077ead111a20d0f2c01921fd25e20e25426604d6d3e311b37da2bc03ce47523d06adafba5c4b8077b67
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*, @types/node@npm:^20.3.1":
   version: 20.12.1
   resolution: "@types/node@npm:20.12.1"
@@ -1791,6 +1800,15 @@ __metadata:
     "@types/methods": "npm:^1.1.4"
     "@types/superagent": "npm:^8.1.0"
   checksum: 10c0/44a28f9b35b65800f4c7bcc23748e71c925098aa74ea504d14c98385c36d00de2a4f5aca15d7dc4514bc80533e0af21f985a4ab9f5f317c7266e9e75836aef39
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^11.0.0":
+  version: 11.0.0
+  resolution: "@types/uuid@npm:11.0.0"
+  dependencies:
+    uuid: "npm:*"
+  checksum: 10c0/6ebf1448d8fdc78d348a8a84389b74083f2f58bed75a5a6cf3be8419d33dcf757735c8b2de746b066ff8ef07f4384d02549774dc84195ffa46b24745471e9d8e
   languageName: node
   linkType: hard
 
@@ -2895,6 +2913,7 @@ __metadata:
     "@types/cookie-parser": "npm:^1"
     "@types/express": "npm:^4.17.17"
     "@types/jest": "npm:^29.5.2"
+    "@types/multer": "npm:^2.0.0"
     "@types/node": "npm:^20.3.1"
     "@types/passport": "npm:^0"
     "@types/passport-google-oauth20": "npm:^2"
@@ -2902,6 +2921,7 @@ __metadata:
     "@types/passport-kakao": "npm:^1"
     "@types/pg": "npm:^8"
     "@types/supertest": "npm:^6.0.0"
+    "@types/uuid": "npm:^11.0.0"
     "@typescript-eslint/eslint-plugin": "npm:^8.18.2"
     "@typescript-eslint/parser": "npm:^8.18.2"
     class-validator: "npm:^0.14.1"
@@ -2932,6 +2952,7 @@ __metadata:
     typeorm: "npm:^0.3.20"
     typeorm-naming-strategies: "npm:^4.1.0"
     typescript: "npm:^5.1.3"
+    uuid: "npm:^13.0.0"
   languageName: unknown
   linkType: soft
 
@@ -8851,6 +8872,15 @@ __metadata:
   version: 1.0.1
   resolution: "utils-merge@npm:1.0.1"
   checksum: 10c0/02ba649de1b7ca8854bfe20a82f1dfbdda3fb57a22ab4a8972a63a34553cf7aa51bc9081cf7e001b035b88186d23689d69e71b510e610a09a4c66f68aa95b672
+  languageName: node
+  linkType: hard
+
+"uuid@npm:*, uuid@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "uuid@npm:13.0.0"
+  bin:
+    uuid: dist-node/bin/uuid
+  checksum: 10c0/950e4c18d57fef6c69675344f5700a08af21e26b9eff2bf2180427564297368c538ea11ac9fb2e6528b17fc3966a9fd2c5049361b0b63c7d654f3c550c9b3d67
   languageName: node
   linkType: hard
 
