@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import {ConfigModule, ConfigService} from '@nestjs/config';
-import {DataSource} from "typeorm";
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -18,6 +18,7 @@ import { SidebarModule } from './sidebar/sidebar.module';
 import { ChecklistItemModule } from './checklist-item/checklist-item.module';
 import { PermissionModule } from './permission/permission.module';
 import { FileModule } from './file/file.module';
+import { SupabaseModule } from './supabase/supabase.module';
 import dbConfig from './config/db.config';
 import supabseConfig from './config/supabse.config';
 
@@ -48,7 +49,9 @@ dotenv.config();
           ssl: { rejectUnauthorized: false },
           dataSourceFactory: async (options) => {
             const dataSource = new DataSource(options);
-            (dataSource.driver.supportedDataTypes as string[]).push('vector');
+            (dataSource.driver.supportedDataTypes as Array<string>).push(
+              'vector',
+            );
             await dataSource.initialize();
             return dataSource;
           },
@@ -67,6 +70,7 @@ dotenv.config();
     ChecklistItemModule,
     PermissionModule,
     FileModule,
+    SupabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
