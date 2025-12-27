@@ -3,7 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
 import * as dotenv from 'dotenv';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
-import { ConfigModule } from '@nestjs/config';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {DataSource} from "typeorm";
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -16,27 +17,43 @@ import { ChecklistModule } from './checklist/checklist.module';
 import { SidebarModule } from './sidebar/sidebar.module';
 import { ChecklistItemModule } from './checklist-item/checklist-item.module';
 import { PermissionModule } from './permission/permission.module';
+import { FileModule } from './file/file.module';
+import dbConfig from './config/db.config';
+import supabseConfig from './config/supabse.config';
 
 dotenv.config();
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      load: [dbConfig, supabseConfig],
     }),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: process.env.DATABASE_HOST,
-      port: parseInt(process.env.DATABASE_PORT, 10),
-      username: process.env.DATABASE_USERNAME,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
-      logging: 'all',
-      entities: [`${__dirname}/**/*.entity{.ts,.js}`],
-      synchronize: false,
-      migrationsRun: false,
-      migrations: [`${__dirname}/../migrations/*.ts`],
-      migrationsTableName: 'migrations',
-      namingStrategy: new SnakeNamingStrategy(),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: configService.get<string>('db.databaseHost'),
+          port: configService.get<number>('db.databasePort'),
+          username: configService.get<string>('db.databaseUsername'),
+          password: configService.get<string>('db.databasePassword'),
+          database: configService.get<string>('db.databaseName'),
+          entities: [`${__dirname}/**/*.entity{.ts,.js}`],
+          autoLoadEntities: true,
+          synchronize: false,
+          namingStrategy: new SnakeNamingStrategy(),
+          logging: ['error'],
+          timezone: 'UTC',
+          ssl: { rejectUnauthorized: false },
+          dataSourceFactory: async (options) => {
+            const dataSource = new DataSource(options);
+            (dataSource.driver.supportedDataTypes as string[]).push('vector');
+            await dataSource.initialize();
+            return dataSource;
+          },
+        };
+      },
     }),
     AuthModule,
     UserModule,
@@ -49,6 +66,7 @@ dotenv.config();
     SidebarModule,
     ChecklistItemModule,
     PermissionModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
