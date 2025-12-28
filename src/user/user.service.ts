@@ -37,27 +37,22 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });
-    return user;
-  }
-
-  async updateUser(
-    userId: number,
-    updateUserDto: UpdateUserDto,
-  ): Promise<void> {
-    const { name: userName, profile_image_url: profileImageUrl } =
-      updateUserDto;
-    const user = await this.userRepository.findOne({ where: { id: userId } });
     if (!user) {
       throw new Error('User not found');
     }
+
+    return user;
+  }
+
+  async updateUser(userId: number, dto: UpdateUserDto): Promise<void> {
+    await this.findOneUser(userId);
+    const user = await this.findOneUser(userId);
 
     if (!user.isChecky) {
       await this.createSampleData(user);
     }
 
-    user.name = userName;
-    user.profileImageUrl = profileImageUrl;
-    user.isChecky = true;
+    Object.assign(user, dto);
     await this.userRepository.save(user);
   }
 

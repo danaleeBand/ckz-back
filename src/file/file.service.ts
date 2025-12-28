@@ -2,6 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuid } from 'uuid';
 import { SupabaseService } from '../supabase/supabase.service';
+import { UploadFileResponseDto } from './upload-file-response.dto';
 
 @Injectable()
 export class FileService {
@@ -10,12 +11,13 @@ export class FileService {
   async uploadUserProfile(
     userId: number,
     file: Express.Multer.File,
-  ): Promise<string> {
+  ): Promise<UploadFileResponseDto> {
     const extension = file.originalname.split('.').pop();
     const fileName = `${uuid()}.${extension}`;
     const path = `users/${userId}/profile/${fileName}`;
 
-    return this.upload(path, file);
+    const fileUrl = await this.upload(path, file);
+    return { fileUrl };
   }
 
   private async upload(
